@@ -43,8 +43,6 @@ export default function Home() {
         </span>
         <span className="open-label" aria-live="polite">{opening ? "OPENING YOUR INVITATION…" : <>OPEN YOUR INVITATION <span aria-hidden="true">↗</span></>}</span>
       </Link>
-      <p className="cover-names">Ahmed & Ashraqat</p>
-      <p className="eyebrow date-small">09 OCTOBER 2026</p>
     </main>
   );
 }
