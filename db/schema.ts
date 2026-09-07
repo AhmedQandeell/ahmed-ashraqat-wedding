@@ -1,0 +1,2 @@
+import {integer,sqliteTable,text,index} from "drizzle-orm/sqlite-core";
+export const wishes=sqliteTable("wishes",{id:text("id").primaryKey(),name:text("name").notNull(),message:text("message").notNull(),createdAt:integer("created_at").notNull(),emailStatus:text("email_status").notNull().default("pending"),ipHash:text("ip_hash").notNull()},t=>[index("wishes_created_idx").on(t.createdAt),index("wishes_ip_created_idx").on(t.ipHash,t.createdAt)]);
