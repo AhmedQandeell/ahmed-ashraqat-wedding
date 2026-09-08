@@ -91,7 +91,7 @@ function WeddingCalendar() {
           overflow: "hidden",
           border: "1px solid rgba(155,131,93,.48)",
           borderRadius: 11,
-          background: "var(--wedding-highlight)",
+          background: "rgba(251,248,241,.78)",
           boxShadow: "0 14px 38px rgba(74,59,39,.05)",
         }}
       >
@@ -99,7 +99,7 @@ function WeddingCalendar() {
           style={{
             padding: "15px 14px 14px",
             borderBottom: "1px solid rgba(155,131,93,.28)",
-            background: "var(--wedding-paper)",
+            background: "rgba(238,230,216,.52)",
           }}
         >
           <h3
