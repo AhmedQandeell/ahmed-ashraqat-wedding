@@ -1,6 +1,7 @@
 import Link from "next/link";
 import AutoScroll from "./auto-scroll";
 import Guestbook from "./guestbook";
+import calendarStyles from "./calendar.module.css";
 import styles from "./old-money.module.css";
 
 function FloralCorner({ className }: { className: string }) {
@@ -98,22 +99,22 @@ export default function Invitation() {
                 <br className="desktop-break" /> all the more meaningful.
               </p>
 
-              <div className={styles.calendarSection}>
-                <div className={styles.calendarCard} aria-label="Friday, 9 October 2026">
-                  <div className={styles.calendarRings} aria-hidden="true">
+              <div className={calendarStyles.calendarSection}>
+                <div className={calendarStyles.calendarCard} aria-label="Friday, 9 October 2026">
+                  <div className={calendarStyles.calendarRings} aria-hidden="true">
                     <span />
                     <span />
                   </div>
-                  <div className={styles.calendarMonth}>OCTOBER</div>
-                  <div className={styles.calendarDate}>09</div>
-                  <div className={styles.calendarMeta}>
+                  <div className={calendarStyles.calendarMonth}>OCTOBER</div>
+                  <div className={calendarStyles.calendarDate}>09</div>
+                  <div className={calendarStyles.calendarMeta}>
                     <span>FRIDAY</span>
                     <i aria-hidden="true">•</i>
                     <span>2026</span>
                   </div>
                 </div>
 
-                <a className={styles.calendarButton} href="/wedding.ics">
+                <a className={calendarStyles.calendarButton} href="/wedding.ics">
                   ADD TO CALENDAR <span aria-hidden="true">＋</span>
                 </a>
               </div>
