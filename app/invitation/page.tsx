@@ -46,10 +46,10 @@ function FloralCorner({ className }: { className: string }) {
 
 function Monogram() {
   return (
-    <span className={styles.monogramMark} aria-label="A and Q">
-      <span>A</span>
-      <i aria-hidden="true">&</i>
+    <span className={styles.monogramMark} aria-label="Q and A">
       <span>Q</span>
+      <i aria-hidden="true">&</i>
+      <span>A</span>
     </span>
   );
 }
@@ -69,8 +69,8 @@ function WeddingCalendar() {
       aria-label="October 2026 wedding calendar"
       style={{
         width: "100%",
-        maxWidth: 520,
-        margin: "44px auto 20px",
+        maxWidth: 450,
+        margin: "40px auto 20px",
         textAlign: "center",
       }}
     >
@@ -90,14 +90,14 @@ function WeddingCalendar() {
         style={{
           overflow: "hidden",
           border: "1px solid rgba(155,131,93,.48)",
-          borderRadius: 12,
+          borderRadius: 11,
           background: "rgba(251,248,241,.78)",
-          boxShadow: "0 16px 44px rgba(74,59,39,.055)",
+          boxShadow: "0 14px 38px rgba(74,59,39,.05)",
         }}
       >
         <header
           style={{
-            padding: "18px 16px 17px",
+            padding: "15px 14px 14px",
             borderBottom: "1px solid rgba(155,131,93,.28)",
             background: "rgba(238,230,216,.52)",
           }}
@@ -107,7 +107,7 @@ function WeddingCalendar() {
               margin: 0,
               color: "#4c4034",
               fontFamily: '"Cormorant Garamond", Garamond, Georgia, serif',
-              fontSize: "clamp(25px, 5vw, 31px)",
+              fontSize: "clamp(23px, 4.6vw, 28px)",
               fontWeight: 500,
               letterSpacing: ".04em",
               lineHeight: 1,
@@ -121,7 +121,7 @@ function WeddingCalendar() {
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(7, minmax(0, 1fr))",
-            padding: "13px 12px 11px",
+            padding: "11px 10px 9px",
             borderBottom: "1px solid rgba(155,131,93,.38)",
           }}
         >
@@ -131,8 +131,8 @@ function WeddingCalendar() {
               style={{
                 color: "#82745f",
                 fontFamily: "Arial, sans-serif",
-                fontSize: "clamp(6.5px, 1.6vw, 8px)",
-                letterSpacing: ".12em",
+                fontSize: "clamp(6px, 1.4vw, 7.5px)",
+                letterSpacing: ".1em",
               }}
             >
               {day}
@@ -146,8 +146,8 @@ function WeddingCalendar() {
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(7, minmax(0, 1fr))",
-            rowGap: 3,
-            padding: "13px 12px 17px",
+            rowGap: 2,
+            padding: "11px 10px 14px",
           }}
         >
           {days.map((day, index) => {
@@ -161,10 +161,10 @@ function WeddingCalendar() {
                   position: "relative",
                   display: "grid",
                   placeItems: "center",
-                  minHeight: "clamp(34px, 8vw, 46px)",
+                  minHeight: "clamp(29px, 6.8vw, 39px)",
                   color: weddingDay ? "#fffaf1" : "#5b4d3f",
                   fontFamily: '"Cormorant Garamond", Garamond, Georgia, serif',
-                  fontSize: "clamp(16px, 4vw, 21px)",
+                  fontSize: "clamp(15px, 3.6vw, 19px)",
                   fontWeight: weddingDay ? 600 : 400,
                   lineHeight: 1,
                 }}
@@ -174,8 +174,8 @@ function WeddingCalendar() {
                     aria-hidden="true"
                     style={{
                       position: "absolute",
-                      width: "clamp(32px, 8vw, 42px)",
-                      height: "clamp(29px, 7.3vw, 38px)",
+                      width: "clamp(29px, 6.8vw, 37px)",
+                      height: "clamp(26px, 6.2vw, 34px)",
                       top: "50%",
                       left: "50%",
                       transform: "translate(-50%, -49%)",
@@ -199,10 +199,10 @@ function WeddingCalendar() {
 
       <p
         style={{
-          margin: "14px 0 0",
+          margin: "12px 0 0",
           color: "#716558",
           fontFamily: '"Cormorant Garamond", Garamond, Georgia, serif',
-          fontSize: "clamp(15px, 3vw, 18px)",
+          fontSize: "clamp(14px, 2.8vw, 17px)",
           fontStyle: "italic",
         }}
       >
@@ -216,7 +216,7 @@ function WeddingCalendar() {
           alignItems: "center",
           justifyContent: "center",
           gap: 11,
-          marginTop: 10,
+          marginTop: 9,
           padding: "8px 2px 10px",
           borderBottom: "1px solid rgba(155,131,93,.72)",
           color: "#5f5142",
@@ -266,7 +266,7 @@ export default function Invitation() {
               <h1 className="couple" style={{ fontSize: "clamp(27px, 8.2vw, 50px)" }}>
                 <span style={{ whiteSpace: "nowrap" }}>Ahmed Qandeel</span>
                 <i>&</i>
-                <span style={{ whiteSpace: "nowrap" }}>Ashraqat El-Bidwehy</span>
+                <span style={{ whiteSpace: "nowrap" }}>Ashrqat El-Bidwehy</span>
               </h1>
 
               <div className="divider" aria-hidden="true">
@@ -280,18 +280,23 @@ export default function Invitation() {
 
               <WeddingCalendar />
 
-              <p className="time">AT EIGHT O’CLOCK IN THE EVENING</p>
-
               <div className="venue">
                 <p className="eyebrow">THE CELEBRATION</p>
                 <h2>Tiba Rose Hotel</h2>
                 <a
-                  className="outline-button"
+                  className="submit-button"
                   href="https://maps.app.goo.gl/BrGWPSXwrq8SqrQB7"
                   target="_blank"
                   rel="noopener noreferrer"
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    minWidth: 190,
+                    textDecoration: "none",
+                  }}
                 >
-                  VIEW LOCATION <span aria-hidden="true">↗</span>
+                  VIEW LOCATION
                 </a>
               </div>
             </div>
@@ -304,7 +309,7 @@ export default function Invitation() {
               <Monogram />
             </div>
             <p>With love and gratitude</p>
-            <p className={styles.footerNames}>Ahmed & Ashraqat</p>
+            <p className={styles.footerNames}>Ahmed & Ashrqat</p>
             <span>09 · 10 · 2026</span>
           </footer>
         </div>
