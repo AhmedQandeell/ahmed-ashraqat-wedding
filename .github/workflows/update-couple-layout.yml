@@ -1,0 +1,31 @@
+name: Update couple layout
+
+on:
+  push:
+    paths:
+      - ".github/workflows/update-couple-layout.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  update-layout:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Update invitation couple layout
+        run: python scripts/update-couple-layout.py
+
+      - name: Commit invitation update and clean temporary files
+        shell: bash
+        run: |
+          rm -f scripts/update-couple-layout.py .github/workflows/update-couple-layout.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A app/invitation/page.tsx scripts/update-couple-layout.py .github/workflows/update-couple-layout.yml
+          git commit -m "Stack Ahmed and Ashrqat with ampersand"
+          git push origin HEAD:main
