@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import MusicPlayer from "./music-player";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -16,6 +17,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <link rel="preload" as="image" href="/envelope.png" fetchPriority="high" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://www.youtube-nocookie.com" />
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Libre+Baskerville:ital,wght@0,400;1,400&display=swap"
@@ -40,7 +42,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           .envelope-scene.envelope-ready::before { opacity: 0; }
         `}</style>
       </head>
-      <body>{children}</body>
+      <body>
+        <MusicPlayer />
+        {children}
+      </body>
     </html>
   );
 }
