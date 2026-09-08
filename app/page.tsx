@@ -4,6 +4,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type MouseEvent } from "react";
 
+const envelopeGrade =
+  "sepia(.22) saturate(.75) brightness(.88) contrast(1.06) drop-shadow(0 20px 24px rgba(0,0,0,.34))";
+
 export default function Home() {
   const router = useRouter();
   const [opening, setOpening] = useState(false);
@@ -68,6 +71,7 @@ export default function Home() {
     transform: opening ? "translate3d(0,-2px,0) scale(1.002)" : "translate3d(0,0,0) scale(1)",
     transition: reducedMotion ? "none" : "opacity 360ms ease 40ms, transform 650ms ease 40ms",
     willChange: opening ? "transform, opacity" : "auto",
+    filter: envelopeGrade,
   } as const;
 
   const closedStateStyle = {
@@ -76,13 +80,48 @@ export default function Home() {
     transform: "translate3d(0,0,0)",
     transition: reducedMotion ? "none" : "opacity 360ms ease 40ms",
     willChange: opening ? "opacity" : "auto",
+    filter: envelopeGrade,
   } as const;
 
   return (
-    <main className={`envelope-page${opening ? " is-opening" : ""}${reducedMotion ? " reduce-opening" : ""}`}>
-      <div className="eyebrow">TO OUR DEAREST FAMILY & FRIENDS</div>
-      <h1>A beautiful beginning.</h1>
-      <p className="intro">And it wouldn’t be the same without you.</p>
+    <main
+      className={`envelope-page${opening ? " is-opening" : ""}${reducedMotion ? " reduce-opening" : ""}`}
+      style={{
+        backgroundColor: "#171511",
+        backgroundImage:
+          "linear-gradient(180deg, rgba(17,15,12,.38) 0%, rgba(17,15,12,.16) 38%, rgba(17,15,12,.31) 100%), url('/floral-envelope-bg.webp')",
+        backgroundSize: "cover",
+        backgroundPosition: "center 45%",
+        backgroundRepeat: "no-repeat",
+        color: "#E2D8CA",
+      }}
+    >
+      <div
+        className="eyebrow"
+        style={{
+          color: "#CDBE9F",
+          textShadow: "0 2px 14px rgba(0,0,0,.55)",
+        }}
+      >
+        TO OUR DEAREST FAMILY & FRIENDS
+      </div>
+      <h1
+        style={{
+          color: "#E2D8CA",
+          textShadow: "0 3px 24px rgba(0,0,0,.52)",
+        }}
+      >
+        A beautiful beginning.
+      </h1>
+      <p
+        className="intro"
+        style={{
+          color: "#D6CBBB",
+          textShadow: "0 2px 18px rgba(0,0,0,.52)",
+        }}
+      >
+        And it wouldn’t be the same without you.
+      </p>
       <Link
         className="envelope-link"
         href="/invitation"
@@ -95,7 +134,7 @@ export default function Home() {
           router.prefetch("/invitation");
           requestMusic();
         }}
-        aria-label={opening ? "Opening your wedding invitation" : "Open Ahmed and Ashraqat’s wedding invitation"}
+        aria-label={opening ? "Opening your wedding invitation" : "Open Ahmed and Ashrqat’s wedding invitation"}
         aria-disabled={opening}
       >
         <span className="envelope-scene" style={smoothSceneStyle}>
@@ -117,7 +156,7 @@ export default function Home() {
             className="envelope-closed-state"
             style={closedStateStyle}
             src="/envelope.png"
-            alt="The back of an ivory envelope, sealed with a gold A&Q monogram"
+            alt="The back of a warm stone ivory envelope, sealed with an antique gold A&Q monogram"
             width="1536"
             height="1024"
             loading="eager"
@@ -135,15 +174,18 @@ export default function Home() {
             justifyContent: "center",
             minWidth: 220,
             minHeight: 47,
-            border: "1px solid rgba(155,131,93,.78)",
+            border: "1px solid rgba(205,190,159,.84)",
             padding: "14px 18px",
-            background: "transparent",
-            color: "#584a3b",
+            background: "rgba(22,19,15,.28)",
+            color: "#E2D8CA",
             fontFamily: "Arial, sans-serif",
             fontSize: 9.5,
             fontWeight: 400,
             letterSpacing: ".22em",
             lineHeight: 1.5,
+            boxShadow: "0 12px 30px rgba(0,0,0,.16)",
+            backdropFilter: "blur(3px)",
+            WebkitBackdropFilter: "blur(3px)",
           }}
         >
           {opening ? "OPENING YOUR INVITATION…" : "OPEN YOUR INVITATION"}
