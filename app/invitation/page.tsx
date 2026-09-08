@@ -98,14 +98,24 @@ export default function Invitation() {
                 <br className="desktop-break" /> all the more meaningful.
               </p>
 
-              <div className="date-block">
-                <span>FRIDAY</span>
-                <strong>09</strong>
-                <span>
-                  OCTOBER
-                  <br />
-                  2026
-                </span>
+              <div className={styles.calendarSection}>
+                <div className={styles.calendarCard} aria-label="Friday, 9 October 2026">
+                  <div className={styles.calendarRings} aria-hidden="true">
+                    <span />
+                    <span />
+                  </div>
+                  <div className={styles.calendarMonth}>OCTOBER</div>
+                  <div className={styles.calendarDate}>09</div>
+                  <div className={styles.calendarMeta}>
+                    <span>FRIDAY</span>
+                    <i aria-hidden="true">•</i>
+                    <span>2026</span>
+                  </div>
+                </div>
+
+                <a className={styles.calendarButton} href="/wedding.ics">
+                  ADD TO CALENDAR <span aria-hidden="true">＋</span>
+                </a>
               </div>
 
               <p className="time">AT EIGHT O’CLOCK IN THE EVENING</p>
