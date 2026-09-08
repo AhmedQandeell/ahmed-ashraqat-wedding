@@ -8,7 +8,6 @@ export default function Home() {
   const router = useRouter();
   const [opening, setOpening] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
-  const [closedReady, setClosedReady] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const idleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const started = useRef(false);
@@ -40,8 +39,6 @@ export default function Home() {
     if (started.current) return;
     started.current = true;
 
-    // Keyboard activation reaches here without pointer/touch events, so keep
-    // this as a final user-gesture path for the music request.
     requestMusic();
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -75,10 +72,10 @@ export default function Home() {
 
   const closedStateStyle = {
     animation: "none",
-    opacity: opening ? 0 : closedReady ? 1 : 0,
+    opacity: opening ? 0 : 1,
     transform: "translate3d(0,0,0)",
-    transition: reducedMotion ? "none" : opening ? "opacity 360ms ease 40ms" : "opacity 180ms ease",
-    willChange: opening || !closedReady ? "opacity" : "auto",
+    transition: reducedMotion ? "none" : "opacity 360ms ease 40ms",
+    willChange: opening ? "opacity" : "auto",
   } as const;
 
   return (
@@ -124,10 +121,9 @@ export default function Home() {
             width="1536"
             height="1024"
             loading="eager"
-            decoding="sync"
+            decoding="async"
             fetchPriority="high"
             draggable={false}
-            onLoad={() => setClosedReady(true)}
           />
         </span>
         <span className="open-label" aria-live="polite">
