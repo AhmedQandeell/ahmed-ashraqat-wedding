@@ -10,14 +10,16 @@ const START_EVENT = "wedding-music-start";
 export default function MusicPlayer() {
   const pathname = usePathname();
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
-  const [requested, setRequested] = useState(false);
+  const mutedRef = useRef(true);
+  const playerStateRef = useRef(-1);
   const [playing, setPlaying] = useState(false);
 
+  const post = (payload: object) => {
+    iframeRef.current?.contentWindow?.postMessage(JSON.stringify(payload), "*");
+  };
+
   const command = (func: string, args: unknown[] = []) => {
-    iframeRef.current?.contentWindow?.postMessage(
-      JSON.stringify({ event: "command", func, args }),
-      "*",
-    );
+    post({ event: "command", func, args });
   };
 
   const makeAudible = (seek = false) => {
@@ -25,33 +27,66 @@ export default function MusicPlayer() {
     command("setVolume", [28]);
     command("unMute");
     command("playVideo");
-    setPlaying(true);
   };
 
   useEffect(() => {
-    const startMusic = () => {
-      setRequested(true);
+    const syncPlayingState = () => {
+      setPlaying(playerStateRef.current === 1 && !mutedRef.current);
+    };
 
-      // The iframe is already autoplaying muted. Because this function runs from
-      // the envelope tap, unmuting here is treated as a user-initiated action by
-      // browsers that allow it.
+    const startMusic = () => {
+      // Runs from the envelope tap. The iframe is already playing muted, so this
+      // only needs to seek, unmute and continue playback.
       makeAudible(true);
     };
 
+    const onMessage = (event: MessageEvent) => {
+      if (
+        event.origin !== "https://www.youtube.com" &&
+        event.origin !== "https://www.youtube-nocookie.com"
+      ) {
+        return;
+      }
+
+      let data: any = event.data;
+      if (typeof data === "string") {
+        try {
+          data = JSON.parse(data);
+        } catch {
+          return;
+        }
+      }
+
+      if (data?.event !== "infoDelivery" || !data?.info) return;
+
+      if (typeof data.info.muted === "boolean") {
+        mutedRef.current = data.info.muted;
+      }
+      if (typeof data.info.playerState === "number") {
+        playerStateRef.current = data.info.playerState;
+      }
+      syncPlayingState();
+    };
+
     window.addEventListener(START_EVENT, startMusic);
-    return () => window.removeEventListener(START_EVENT, startMusic);
+    window.addEventListener("message", onMessage);
+
+    return () => {
+      window.removeEventListener(START_EVENT, startMusic);
+      window.removeEventListener("message", onMessage);
+    };
   }, []);
 
   const toggleMusic = () => {
     if (playing) {
       command("pauseVideo");
+      playerStateRef.current = 2;
       setPlaying(false);
       return;
     }
 
-    // This button is a direct user gesture, so it is the reliable fallback on
-    // iOS/Android when automatic unmuting is blocked by the browser.
-    setRequested(true);
+    // Direct button taps are the guaranteed mobile fallback when the browser
+    // refuses to unmute an embedded player automatically.
     makeAudible(false);
   };
 
@@ -65,6 +100,7 @@ export default function MusicPlayer() {
         aria-hidden="true"
         tabIndex={-1}
         loading="eager"
+        onLoad={() => post({ event: "listening" })}
         style={{
           position: "fixed",
           width: 1,
@@ -88,9 +124,9 @@ export default function MusicPlayer() {
             right: 16,
             bottom: 18,
             zIndex: 50,
-            minWidth: requested ? 42 : 112,
+            minWidth: playing ? 42 : 118,
             height: 42,
-            padding: requested ? 0 : "0 14px",
+            padding: playing ? 0 : "0 14px",
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "center",
@@ -103,12 +139,12 @@ export default function MusicPlayer() {
             backdropFilter: "blur(7px)",
             WebkitBackdropFilter: "blur(7px)",
             cursor: "pointer",
-            font: requested ? "18px/1 Georgia, serif" : "10px/1 Arial, sans-serif",
-            letterSpacing: requested ? 0 : ".13em",
+            font: playing ? "18px/1 Georgia, serif" : "10px/1 Arial, sans-serif",
+            letterSpacing: playing ? 0 : ".13em",
           }}
         >
           <span aria-hidden="true">{playing ? "♫" : "♩"}</span>
-          {!requested ? <span>PLAY MUSIC</span> : null}
+          {!playing ? <span>PLAY MUSIC</span> : null}
         </button>
       ) : null}
     </>
