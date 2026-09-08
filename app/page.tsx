@@ -8,19 +8,18 @@ export default function Home() {
   const router = useRouter();
   const [opening, setOpening] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
-  const [closedReady, setClosedReady] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const idleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const started = useRef(false);
   const openImage = useRef<HTMLImageElement | null>(null);
 
   useEffect(() => {
-    // Start loading the next route immediately. This must not wait for the large
-    // envelope images to decode, otherwise the route transition feels delayed.
+    // Start loading the next route immediately so the invitation is ready before
+    // the envelope opening animation finishes.
     router.prefetch("/invitation");
 
-    // Warm the open-envelope image only after the critical first paint has had
-    // a chance to happen. The closed envelope remains the network priority.
+    // Warm the open-envelope image after the critical closed-envelope artwork has
+    // started loading. This does not affect the original closed-envelope appearance.
     idleTimer.current = setTimeout(() => {
       void openImage.current?.decode().catch(() => undefined);
     }, 220);
@@ -42,8 +41,6 @@ export default function Home() {
     setReducedMotion(reduce);
     setOpening(true);
 
-    // The invitation route is already prefetched, so navigate as soon as the
-    // visual opening completes instead of holding on a faded envelope.
     timer.current = setTimeout(() => router.push("/invitation"), reduce ? 80 : 1180);
   }
 
@@ -71,9 +68,9 @@ export default function Home() {
 
   const closedStateStyle = {
     animation: "none",
-    opacity: closedReady && !opening ? 1 : 0,
+    opacity: opening ? 0 : 1,
     transform: "translate3d(0,0,0)",
-    transition: reducedMotion ? "none" : "opacity 260ms ease",
+    transition: reducedMotion ? "none" : "opacity 360ms ease 40ms",
     willChange: opening ? "opacity" : "auto",
   } as const;
 
@@ -91,7 +88,7 @@ export default function Home() {
         aria-label={opening ? "Opening your wedding invitation" : "Open Ahmed and Ashraqat’s wedding invitation"}
         aria-disabled={opening}
       >
-        <span className={`envelope-scene${closedReady ? " envelope-ready" : ""}`} style={smoothSceneStyle}>
+        <span className="envelope-scene" style={smoothSceneStyle}>
           <img
             ref={openImage}
             className="envelope-open-state"
@@ -115,7 +112,6 @@ export default function Home() {
             loading="eager"
             decoding="async"
             fetchPriority="high"
-            onLoad={() => setClosedReady(true)}
           />
         </span>
         <span className="open-label" aria-live="polite">
