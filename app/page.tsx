@@ -125,34 +125,6 @@ export default function Home() {
             fetchPriority="high"
             draggable={false}
           />
-          <span
-            aria-hidden="true"
-            style={{
-              position: "absolute",
-              left: "50%",
-              top: "53.3%",
-              zIndex: 6,
-              width: "clamp(42px, 9.2%, 56px)",
-              aspectRatio: "1",
-              display: "grid",
-              placeItems: "center",
-              transform: "translate(-50%, -50%)",
-              borderRadius: "50%",
-              background: "radial-gradient(circle, rgba(201,168,108,.98) 0%, rgba(196,158,94,.94) 56%, rgba(184,142,75,.56) 69%, rgba(184,142,75,0) 78%)",
-              color: "#74572f",
-              fontFamily: '"Cormorant Garamond", Georgia, serif',
-              fontSize: "clamp(11px, 2.1vw, 16px)",
-              fontWeight: 600,
-              letterSpacing: ".025em",
-              lineHeight: 1,
-              textShadow: "0 1px 0 rgba(255,245,220,.22)",
-              opacity: opening ? 0 : 1,
-              transition: reducedMotion ? "none" : "opacity 220ms ease 40ms",
-              pointerEvents: "none",
-            }}
-          >
-            Q&A
-          </span>
         </span>
         <span className="open-label" aria-live="polite">
           {opening ? "OPENING YOUR INVITATION…" : <>OPEN YOUR INVITATION <span aria-hidden="true">↗</span></>}
