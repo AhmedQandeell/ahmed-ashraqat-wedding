@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 
 const START_DELAY_MS = 1800;
-const SCROLL_SPEED_PX_PER_SECOND = 22;
+const SCROLL_SPEED_PX_PER_SECOND = 60;
 
 export default function AutoScroll() {
   useEffect(() => {
@@ -16,8 +16,9 @@ export default function AutoScroll() {
     let stopped = false;
     let frame = 0;
     let startTimer: ReturnType<typeof setTimeout> | null = null;
-    let lastTime = 0;
-    let scrollPosition = window.scrollY;
+    let startTime = 0;
+    let startPosition = window.scrollY;
+    let lastRenderedPosition = Math.round(window.scrollY);
     let autoScrollStarted = false;
 
     const restoreScrollBehavior = () => {
@@ -38,13 +39,7 @@ export default function AutoScroll() {
       }
     };
 
-    const step = (time: number) => {
-      if (stopped) return;
-
-      if (!lastTime) lastTime = time;
-      const elapsed = Math.min(time - lastTime, 50);
-      lastTime = time;
-
+    const getStopAt = () => {
       const guestbook = document.getElementById("guestbook");
       const documentBottom = Math.max(0, root.scrollHeight - window.innerHeight);
       const guestbookTop = guestbook
@@ -54,16 +49,32 @@ export default function AutoScroll() {
         0,
         guestbookTop - Math.min(window.innerHeight * 0.18, 120),
       );
-      const stopAt = Math.min(guestbookStop, documentBottom);
+      return Math.min(guestbookStop, documentBottom);
+    };
 
-      if (scrollPosition >= stopAt - 1) {
-        window.scrollTo(0, stopAt);
+    const step = (time: number) => {
+      if (stopped) return;
+
+      if (!startTime) startTime = time;
+
+      const stopAt = getStopAt();
+      const elapsedSeconds = (time - startTime) / 1000;
+      const desiredPosition = Math.min(
+        startPosition + SCROLL_SPEED_PX_PER_SECOND * elapsedSeconds,
+        stopAt,
+      );
+      const nextPosition = Math.round(desiredPosition);
+
+      if (nextPosition !== lastRenderedPosition) {
+        lastRenderedPosition = nextPosition;
+        window.scrollTo(0, nextPosition);
+      }
+
+      if (nextPosition >= stopAt - 1) {
         stop();
         return;
       }
 
-      scrollPosition += (SCROLL_SPEED_PX_PER_SECOND * elapsed) / 1000;
-      window.scrollTo(0, Math.min(scrollPosition, stopAt));
       frame = requestAnimationFrame(step);
     };
 
@@ -77,7 +88,9 @@ export default function AutoScroll() {
       if (!stopped && document.visibilityState === "visible") {
         autoScrollStarted = true;
         root.style.scrollBehavior = "auto";
-        scrollPosition = window.scrollY;
+        startPosition = window.scrollY;
+        lastRenderedPosition = Math.round(startPosition);
+        startTime = 0;
         frame = requestAnimationFrame(step);
       }
     }, START_DELAY_MS);
