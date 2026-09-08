@@ -1,0 +1,42 @@
+name: Fix envelope wax monogram
+
+on:
+  push:
+    paths:
+      - "scripts/fix-envelope-monogram.py"
+
+permissions:
+  contents: write
+
+jobs:
+  fix-monogram:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install image tools
+        run: python -m pip install --quiet pillow opencv-python-headless numpy
+
+      - name: Replace A&Q inside original wax seal
+        run: python scripts/fix-envelope-monogram.py
+
+      - name: Commit edited envelope image
+        shell: bash
+        run: |
+          if git diff --quiet -- public/envelope.png; then
+            echo "No envelope image change detected."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/envelope.png
+          git commit -m "Update envelope wax monogram to Q&A"
+          git push origin HEAD:main
