@@ -10,7 +10,6 @@ const START_EVENT = "wedding-music-start";
 export default function MusicPlayer() {
   const pathname = usePathname();
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
-  const retryTimer = useRef<ReturnType<typeof setInterval> | null>(null);
   const [requested, setRequested] = useState(false);
   const [playing, setPlaying] = useState(false);
 
@@ -21,68 +20,46 @@ export default function MusicPlayer() {
     );
   };
 
+  const makeAudible = (seek = false) => {
+    if (seek) command("seekTo", [START_AT_SECONDS, true]);
+    command("setVolume", [28]);
+    command("unMute");
+    command("playVideo");
+    setPlaying(true);
+  };
+
   useEffect(() => {
     const startMusic = () => {
       setRequested(true);
-      setPlaying(true);
 
-      const sendStartCommands = (includeSeek: boolean) => {
-        const player = iframeRef.current?.contentWindow;
-        if (!player) return;
-
-        if (includeSeek) {
-          player.postMessage(
-            JSON.stringify({ event: "command", func: "seekTo", args: [START_AT_SECONDS, true] }),
-            "*",
-          );
-        }
-        player.postMessage(
-          JSON.stringify({ event: "command", func: "setVolume", args: [28] }),
-          "*",
-        );
-        player.postMessage(
-          JSON.stringify({ event: "command", func: "playVideo", args: [] }),
-          "*",
-        );
-      };
-
-      // First attempt runs directly from the user's envelope tap.
-      sendStartCommands(true);
-
-      if (retryTimer.current) clearInterval(retryTimer.current);
-      let attempts = 0;
-      retryTimer.current = setInterval(() => {
-        attempts += 1;
-        sendStartCommands(false);
-        if (attempts >= 8 && retryTimer.current) {
-          clearInterval(retryTimer.current);
-          retryTimer.current = null;
-        }
-      }, 180);
+      // The iframe is already autoplaying muted. Because this function runs from
+      // the envelope tap, unmuting here is treated as a user-initiated action by
+      // browsers that allow it.
+      makeAudible(true);
     };
 
     window.addEventListener(START_EVENT, startMusic);
-    return () => {
-      window.removeEventListener(START_EVENT, startMusic);
-      if (retryTimer.current) clearInterval(retryTimer.current);
-    };
+    return () => window.removeEventListener(START_EVENT, startMusic);
   }, []);
 
   const toggleMusic = () => {
     if (playing) {
       command("pauseVideo");
       setPlaying(false);
-    } else {
-      command("playVideo");
-      setPlaying(true);
+      return;
     }
+
+    // This button is a direct user gesture, so it is the reliable fallback on
+    // iOS/Android when automatic unmuting is blocked by the browser.
+    setRequested(true);
+    makeAudible(false);
   };
 
   return (
     <>
       <iframe
         ref={iframeRef}
-        src={`https://www.youtube-nocookie.com/embed/${VIDEO_ID}?enablejsapi=1&playsinline=1&controls=0&disablekb=1&fs=0&rel=0&loop=1&playlist=${VIDEO_ID}&start=${START_AT_SECONDS}`}
+        src={`https://www.youtube-nocookie.com/embed/${VIDEO_ID}?enablejsapi=1&playsinline=1&controls=0&disablekb=1&fs=0&rel=0&loop=1&playlist=${VIDEO_ID}&start=${START_AT_SECONDS}&autoplay=1&mute=1`}
         title="Wedding music"
         allow="autoplay; encrypted-media"
         aria-hidden="true"
@@ -100,7 +77,7 @@ export default function MusicPlayer() {
         }}
       />
 
-      {requested && pathname.startsWith("/invitation") ? (
+      {pathname.startsWith("/invitation") ? (
         <button
           type="button"
           onClick={toggleMusic}
@@ -111,22 +88,27 @@ export default function MusicPlayer() {
             right: 16,
             bottom: 18,
             zIndex: 50,
-            width: 42,
+            minWidth: requested ? 42 : 112,
             height: 42,
-            display: "grid",
-            placeItems: "center",
+            padding: requested ? 0 : "0 14px",
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 7,
             border: "1px solid rgba(155,131,93,.68)",
-            borderRadius: "50%",
-            background: "rgba(250,247,240,.9)",
+            borderRadius: 22,
+            background: "rgba(250,247,240,.94)",
             color: "#5c4e3f",
             boxShadow: "0 8px 24px rgba(74,59,39,.10)",
             backdropFilter: "blur(7px)",
             WebkitBackdropFilter: "blur(7px)",
             cursor: "pointer",
-            font: "18px/1 Georgia, serif",
+            font: requested ? "18px/1 Georgia, serif" : "10px/1 Arial, sans-serif",
+            letterSpacing: requested ? 0 : ".13em",
           }}
         >
           <span aria-hidden="true">{playing ? "♫" : "♩"}</span>
+          {!requested ? <span>PLAY MUSIC</span> : null}
         </button>
       ) : null}
     </>
