@@ -37,6 +37,10 @@ export default function Home() {
     if (started.current) return;
     started.current = true;
 
+    // Start the persistent wedding music from the same user gesture that opens
+    // the envelope. The player lives in the root layout, so it survives the route change.
+    window.dispatchEvent(new Event("wedding-music-start"));
+
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     setReducedMotion(reduce);
     setOpening(true);
