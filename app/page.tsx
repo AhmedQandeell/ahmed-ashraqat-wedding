@@ -95,7 +95,7 @@ export default function Home() {
           router.prefetch("/invitation");
           requestMusic();
         }}
-        aria-label={opening ? "Opening your wedding invitation" : "Open Ahmed and Ashrqat’s wedding invitation"}
+        aria-label={opening ? "Opening your wedding invitation" : "Open Ahmed and Ashraqat’s wedding invitation"}
         aria-disabled={opening}
       >
         <span className="envelope-scene" style={smoothSceneStyle}>
@@ -117,7 +117,7 @@ export default function Home() {
             className="envelope-closed-state"
             style={closedStateStyle}
             src="/envelope.png"
-            alt="The back of an ivory envelope, sealed with a gold Q&A monogram"
+            alt="The back of an ivory envelope, sealed with a gold A&Q monogram"
             width="1536"
             height="1024"
             loading="eager"
