@@ -8,18 +8,16 @@ export default function Home() {
   const router = useRouter();
   const [opening, setOpening] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
+  const [closedReady, setClosedReady] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const idleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const started = useRef(false);
+  const musicRequested = useRef(false);
   const openImage = useRef<HTMLImageElement | null>(null);
 
   useEffect(() => {
-    // Start loading the next route immediately so the invitation is ready before
-    // the envelope opening animation finishes.
     router.prefetch("/invitation");
 
-    // Warm the open-envelope image after the critical closed-envelope artwork has
-    // started loading. This does not affect the original closed-envelope appearance.
     idleTimer.current = setTimeout(() => {
       void openImage.current?.decode().catch(() => undefined);
     }, 220);
@@ -30,16 +28,21 @@ export default function Home() {
     };
   }, [router]);
 
+  const requestMusic = () => {
+    if (musicRequested.current) return;
+    musicRequested.current = true;
+    window.dispatchEvent(new Event("wedding-music-start"));
+  };
+
   function openEnvelope(event: MouseEvent<HTMLAnchorElement>) {
-    // Preserve normal browser behavior for opening the invitation in another tab.
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
     event.preventDefault();
     if (started.current) return;
     started.current = true;
 
-    // Start the persistent wedding music from the same user gesture that opens
-    // the envelope. The player lives in the root layout, so it survives the route change.
-    window.dispatchEvent(new Event("wedding-music-start"));
+    // Keyboard activation reaches here without pointer/touch events, so keep
+    // this as a final user-gesture path for the music request.
+    requestMusic();
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     setReducedMotion(reduce);
@@ -72,10 +75,10 @@ export default function Home() {
 
   const closedStateStyle = {
     animation: "none",
-    opacity: opening ? 0 : 1,
+    opacity: opening ? 0 : closedReady ? 1 : 0,
     transform: "translate3d(0,0,0)",
-    transition: reducedMotion ? "none" : "opacity 360ms ease 40ms",
-    willChange: opening ? "opacity" : "auto",
+    transition: reducedMotion ? "none" : opening ? "opacity 360ms ease 40ms" : "opacity 180ms ease",
+    willChange: opening || !closedReady ? "opacity" : "auto",
   } as const;
 
   return (
@@ -87,8 +90,14 @@ export default function Home() {
         className="envelope-link"
         href="/invitation"
         onClick={openEnvelope}
+        onPointerDown={(event) => {
+          if (event.button === 0) requestMusic();
+        }}
         onPointerEnter={() => router.prefetch("/invitation")}
-        onTouchStart={() => router.prefetch("/invitation")}
+        onTouchStart={() => {
+          router.prefetch("/invitation");
+          requestMusic();
+        }}
         aria-label={opening ? "Opening your wedding invitation" : "Open Ahmed and Ashraqat’s wedding invitation"}
         aria-disabled={opening}
       >
@@ -105,6 +114,7 @@ export default function Home() {
             loading="eager"
             decoding="async"
             fetchPriority="low"
+            draggable={false}
           />
           <img
             className="envelope-closed-state"
@@ -114,8 +124,10 @@ export default function Home() {
             width="1536"
             height="1024"
             loading="eager"
-            decoding="async"
+            decoding="sync"
             fetchPriority="high"
+            draggable={false}
+            onLoad={() => setClosedReady(true)}
           />
         </span>
         <span className="open-label" aria-live="polite">
