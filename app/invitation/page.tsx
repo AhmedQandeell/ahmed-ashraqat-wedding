@@ -264,9 +264,7 @@ export default function Invitation() {
               </p>
 
               <h1 className="couple" style={{ fontSize: "clamp(27px, 8.2vw, 50px)" }}>
-                <span style={{ whiteSpace: "nowrap" }}>Ahmed Qandeel</span>
-                <i>&</i>
-                <span style={{ whiteSpace: "nowrap" }}>Ashrqat El-Bidwehy</span>
+                <span style={{ whiteSpace: "nowrap" }}>Ahmed And Ashrqat</span>
               </h1>
 
               <div className="divider" aria-hidden="true">
@@ -309,7 +307,7 @@ export default function Invitation() {
               <Monogram />
             </div>
             <p>With love and gratitude</p>
-            <p className={styles.footerNames}>Ahmed & Ashrqat</p>
+            <p className={styles.footerNames}>Ahmed And Ashrqat</p>
             <span>09 · 10 · 2026</span>
           </footer>
         </div>
