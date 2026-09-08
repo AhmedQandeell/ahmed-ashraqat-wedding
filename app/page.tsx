@@ -113,7 +113,7 @@ export default function Home() {
       }}
     >
       <img
-        src="/floral-envelope-bg.jpg"
+        src="/download.jpg"
         alt=""
         aria-hidden="true"
         loading="eager"
