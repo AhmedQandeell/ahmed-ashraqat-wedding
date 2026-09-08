@@ -95,7 +95,7 @@ export default function Home() {
           router.prefetch("/invitation");
           requestMusic();
         }}
-        aria-label={opening ? "Opening your wedding invitation" : "Open Ahmed and Ashraqat’s wedding invitation"}
+        aria-label={opening ? "Opening your wedding invitation" : "Open Ahmed and Ashrqat’s wedding invitation"}
         aria-disabled={opening}
       >
         <span className="envelope-scene" style={smoothSceneStyle}>
@@ -117,7 +117,7 @@ export default function Home() {
             className="envelope-closed-state"
             style={closedStateStyle}
             src="/envelope.png"
-            alt="The back of an ivory envelope, sealed with a gold A&Q monogram"
+            alt="The back of an ivory envelope, sealed with a gold Q&A monogram"
             width="1536"
             height="1024"
             loading="eager"
@@ -125,6 +125,31 @@ export default function Home() {
             fetchPriority="high"
             draggable={false}
           />
+          <span
+            aria-hidden="true"
+            style={{
+              position: "absolute",
+              left: "50%",
+              top: "56.2%",
+              zIndex: 6,
+              width: "clamp(116px, 28%, 160px)",
+              height: "clamp(48px, 12%, 72px)",
+              display: "grid",
+              placeItems: "center",
+              transform: "translate(-50%, -50%)",
+              background: "radial-gradient(ellipse at center, rgba(242,234,220,1) 0%, rgba(242,234,220,.98) 58%, rgba(242,234,220,.86) 76%, rgba(242,234,220,0) 100%)",
+              color: "#9a7a4d",
+              fontFamily: '"Cormorant Garamond", Georgia, serif',
+              fontSize: "clamp(24px, 5vw, 38px)",
+              fontStyle: "italic",
+              letterSpacing: ".06em",
+              opacity: opening ? 0 : 1,
+              transition: reducedMotion ? "none" : "opacity 260ms ease 40ms",
+              pointerEvents: "none",
+            }}
+          >
+            Q & A
+          </span>
         </span>
         <span className="open-label" aria-live="polite">
           {opening ? "OPENING YOUR INVITATION…" : <>OPEN YOUR INVITATION <span aria-hidden="true">↗</span></>}
