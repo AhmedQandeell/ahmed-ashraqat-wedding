@@ -55,116 +55,169 @@ function Monogram() {
 }
 
 function WeddingCalendar() {
+  const weekdays = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+  const days: Array<number | null> = [
+    null, null, null, null, 1, 2, 3,
+    4, 5, 6, 7, 8, 9, 10,
+    11, 12, 13, 14, 15, 16, 17,
+    18, 19, 20, 21, 22, 23, 24,
+    25, 26, 27, 28, 29, 30, 31,
+  ];
+
   return (
     <section
-      aria-label="Wedding date and add to calendar"
+      aria-label="October 2026 wedding calendar"
       style={{
-        display: "grid",
-        justifyItems: "center",
-        gap: 14,
-        margin: "42px auto 18px",
+        width: "100%",
+        maxWidth: 520,
+        margin: "44px auto 20px",
+        textAlign: "center",
       }}
     >
-      <div
-        aria-label="Friday, 9 October 2026"
+      <p
         style={{
-          position: "relative",
-          width: "min(194px, 70vw)",
-          border: "1px solid rgba(155,131,93,.62)",
-          background: "#fbf8f1",
-          boxShadow: "0 14px 34px rgba(74,59,39,.075)",
-          textAlign: "center",
-          overflow: "visible",
+          margin: "0 0 8px",
+          color: "#776a59",
+          fontFamily: "Arial, sans-serif",
+          fontSize: 9,
+          letterSpacing: ".28em",
         }}
       >
-        <span
-          aria-hidden="true"
+        SAVE THE DATE
+      </p>
+
+      <div
+        style={{
+          overflow: "hidden",
+          border: "1px solid rgba(155,131,93,.48)",
+          borderRadius: 12,
+          background: "rgba(251,248,241,.78)",
+          boxShadow: "0 16px 44px rgba(74,59,39,.055)",
+        }}
+      >
+        <header
           style={{
-            position: "absolute",
-            top: -9,
-            left: 43,
-            width: 3,
-            height: 19,
-            borderRadius: 99,
-            background: "#9b835d",
-            boxShadow: "0 0 0 3px #f7f2e9",
-            zIndex: 3,
+            padding: "18px 16px 17px",
+            borderBottom: "1px solid rgba(155,131,93,.28)",
+            background: "rgba(238,230,216,.52)",
           }}
-        />
-        <span
-          aria-hidden="true"
-          style={{
-            position: "absolute",
-            top: -9,
-            right: 43,
-            width: 3,
-            height: 19,
-            borderRadius: 99,
-            background: "#9b835d",
-            boxShadow: "0 0 0 3px #f7f2e9",
-            zIndex: 3,
-          }}
-        />
+        >
+          <h3
+            style={{
+              margin: 0,
+              color: "#4c4034",
+              fontFamily: '"Cormorant Garamond", Garamond, Georgia, serif',
+              fontSize: "clamp(25px, 5vw, 31px)",
+              fontWeight: 500,
+              letterSpacing: ".04em",
+              lineHeight: 1,
+            }}
+          >
+            October 2026
+          </h3>
+        </header>
 
         <div
           style={{
-            padding: "17px 12px 13px",
-            borderBottom: "1px solid rgba(155,131,93,.34)",
-            background: "#eee6d8",
-            color: "#655747",
-            fontFamily: "Arial, sans-serif",
-            fontSize: 9,
-            letterSpacing: ".31em",
+            display: "grid",
+            gridTemplateColumns: "repeat(7, minmax(0, 1fr))",
+            padding: "13px 12px 11px",
+            borderBottom: "1px solid rgba(155,131,93,.38)",
           }}
         >
-          OCTOBER
+          {weekdays.map((day) => (
+            <span
+              key={day}
+              style={{
+                color: "#82745f",
+                fontFamily: "Arial, sans-serif",
+                fontSize: "clamp(6.5px, 1.6vw, 8px)",
+                letterSpacing: ".12em",
+              }}
+            >
+              {day}
+            </span>
+          ))}
         </div>
 
-        <time
-          dateTime="2026-10-09"
-          style={{
-            display: "block",
-            padding: "14px 12px 0",
-            color: "#453a30",
-            fontFamily: '"Cormorant Garamond", Garamond, Georgia, serif',
-            fontSize: "clamp(62px, 18vw, 72px)",
-            fontWeight: 400,
-            letterSpacing: "-.035em",
-            lineHeight: .98,
-          }}
-        >
-          09
-        </time>
-
         <div
+          role="grid"
+          aria-label="October 2026"
           style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 10,
-            padding: "10px 12px 17px",
-            color: "#736653",
-            fontFamily: "Arial, sans-serif",
-            fontSize: 8,
-            letterSpacing: ".2em",
+            display: "grid",
+            gridTemplateColumns: "repeat(7, minmax(0, 1fr))",
+            rowGap: 3,
+            padding: "13px 12px 17px",
           }}
         >
-          <span>FRIDAY</span>
-          <span aria-hidden="true" style={{ color: "#a58c66", letterSpacing: 0 }}>•</span>
-          <span>2026</span>
+          {days.map((day, index) => {
+            const weddingDay = day === 9;
+            return (
+              <div
+                key={`${index}-${day ?? "blank"}`}
+                role="gridcell"
+                aria-label={weddingDay ? "Friday, October 9, 2026 — wedding day" : day ? `October ${day}, 2026` : undefined}
+                style={{
+                  position: "relative",
+                  display: "grid",
+                  placeItems: "center",
+                  minHeight: "clamp(34px, 8vw, 46px)",
+                  color: weddingDay ? "#fffaf1" : "#5b4d3f",
+                  fontFamily: '"Cormorant Garamond", Garamond, Georgia, serif',
+                  fontSize: "clamp(16px, 4vw, 21px)",
+                  fontWeight: weddingDay ? 600 : 400,
+                  lineHeight: 1,
+                }}
+              >
+                {weddingDay ? (
+                  <span
+                    aria-hidden="true"
+                    style={{
+                      position: "absolute",
+                      width: "clamp(32px, 8vw, 42px)",
+                      height: "clamp(29px, 7.3vw, 38px)",
+                      top: "50%",
+                      left: "50%",
+                      transform: "translate(-50%, -49%)",
+                      zIndex: 0,
+                    }}
+                  >
+                    <svg viewBox="0 0 44 40" width="100%" height="100%" fill="none">
+                      <path
+                        d="M22 38S3 27.2 3 13.2C3 6.9 7.5 3 13 3c4.2 0 7.3 2.4 9 5.1C23.7 5.4 26.8 3 31 3c5.5 0 10 3.9 10 10.2C41 27.2 22 38 22 38Z"
+                        fill="#9B835D"
+                      />
+                    </svg>
+                  </span>
+                ) : null}
+                <span style={{ position: "relative", zIndex: 1 }}>{day ?? ""}</span>
+              </div>
+            );
+          })}
         </div>
       </div>
 
+      <p
+        style={{
+          margin: "14px 0 0",
+          color: "#716558",
+          fontFamily: '"Cormorant Garamond", Garamond, Georgia, serif',
+          fontSize: "clamp(15px, 3vw, 18px)",
+          fontStyle: "italic",
+        }}
+      >
+        Friday, October 9 at 8:00 PM
+      </p>
+
       <a
         href="/wedding.ics"
-        download="Ahmed-Ashraqat-Wedding.ics"
         style={{
           display: "inline-flex",
           alignItems: "center",
           justifyContent: "center",
           gap: 11,
-          minWidth: "min(194px, 70vw)",
-          padding: "7px 2px 9px",
+          marginTop: 10,
+          padding: "8px 2px 10px",
           borderBottom: "1px solid rgba(155,131,93,.72)",
           color: "#5f5142",
           textDecoration: "none",
@@ -174,7 +227,8 @@ function WeddingCalendar() {
           letterSpacing: ".2em",
         }}
       >
-        ADD TO CALENDAR <span aria-hidden="true" style={{ color: "#9b835d", fontSize: 14, letterSpacing: 0 }}>＋</span>
+        ADD TO CALENDAR
+        <span aria-hidden="true" style={{ color: "#9b835d", fontSize: 14, letterSpacing: 0 }}>＋</span>
       </a>
     </section>
   );
