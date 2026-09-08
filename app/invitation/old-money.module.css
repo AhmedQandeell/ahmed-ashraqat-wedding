@@ -1,0 +1,524 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Libre+Baskerville:ital,wght@0,400;1,400&display=swap");
+
+.oldMoney {
+  --om-paper: #faf7f0;
+  --om-background: #f3f0e8;
+  --om-ink: #3c342c;
+  --om-muted: #6e6254;
+  --om-gold: #9b835d;
+  --om-gold-soft: #cdbE9f;
+  --om-botanical: #a79a79;
+  position: relative;
+  max-width: none;
+  min-height: 100vh;
+  overflow: hidden;
+  padding: 0 28px;
+  color: var(--om-ink);
+  background:
+    radial-gradient(circle at 12% 8%, rgba(155,131,93,.055), transparent 28%),
+    radial-gradient(circle at 88% 84%, rgba(167,154,121,.05), transparent 30%),
+    linear-gradient(180deg, #f6f2ea 0%, var(--om-background) 52%, #f1ede4 100%);
+  font-family: "Libre Baskerville", Baskerville, "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, serif;
+}
+
+.oldMoney::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: .22;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.055'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
+}
+
+.content {
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.floral {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  width: clamp(230px, 25vw, 360px);
+  color: var(--om-botanical);
+  opacity: .105;
+}
+
+.floralTop {
+  top: 58px;
+  left: max(-82px, calc(50% - 670px));
+}
+
+.floralBottom {
+  right: max(-88px, calc(50% - 680px));
+  bottom: 88px;
+  transform: rotate(180deg) scale(.94);
+  opacity: .08;
+}
+
+.oldMoney :global(nav) {
+  padding: 30px 14px 42px;
+}
+
+.oldMoney :global(nav > a) {
+  color: #5e5144;
+  font-family: Arial, sans-serif;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: .24em;
+}
+
+.monogramMark {
+  display: inline-flex;
+  align-items: baseline;
+  gap: .16em;
+  color: var(--om-ink);
+  font-family: "Cormorant Garamond", Garamond, Georgia, serif;
+  font-size: 31px;
+  font-weight: 500;
+  letter-spacing: .04em;
+  line-height: 1;
+}
+
+.monogramMark i {
+  color: var(--om-gold);
+  font-size: .72em;
+  font-weight: 400;
+}
+
+.oldMoney :global(.invitation-card) {
+  position: relative;
+  max-width: 810px;
+  margin: 0 auto;
+  padding: 10px;
+  border: 1px solid rgba(155,131,93,.82);
+  background: var(--om-paper);
+  box-shadow: 0 24px 70px rgba(74,59,39,.065);
+}
+
+.oldMoney :global(.invitation-card)::before,
+.oldMoney :global(.invitation-card)::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  width: 34px;
+  height: 34px;
+  border-color: rgba(155,131,93,.55);
+}
+
+.oldMoney :global(.invitation-card)::before {
+  top: 20px;
+  left: 20px;
+  border-top: 1px solid;
+  border-left: 1px solid;
+}
+
+.oldMoney :global(.invitation-card)::after {
+  right: 20px;
+  bottom: 20px;
+  border-right: 1px solid;
+  border-bottom: 1px solid;
+}
+
+.oldMoney :global(.inner-frame) {
+  border: 1px solid rgba(205,190,159,.92);
+  padding: 72px 46px 66px;
+  background: linear-gradient(rgba(255,255,255,.14), rgba(255,255,255,.03));
+}
+
+.oldMoney :global(.eyebrow) {
+  color: #776a59;
+  font-family: Arial, sans-serif;
+  font-size: 9.5px;
+  font-weight: 400;
+  letter-spacing: .29em;
+  line-height: 1.8;
+}
+
+.oldMoney :global(.welcome) {
+  margin: 31px 0 19px;
+  color: #6f6253;
+  font-family: "Cormorant Garamond", Garamond, Georgia, serif;
+  font-size: clamp(25px, 2.5vw, 31px);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: .01em;
+}
+
+.oldMoney :global(.formal) {
+  max-width: 560px;
+  margin: 0 auto 46px;
+  color: var(--om-muted);
+  font-size: 14px;
+  line-height: 2;
+}
+
+.oldMoney :global(.couple) {
+  gap: 5px;
+  color: var(--om-ink);
+  font-family: "Cormorant Garamond", Garamond, Georgia, serif;
+  font-size: clamp(38px, 4.6vw, 50px);
+  font-weight: 500;
+  letter-spacing: -.018em;
+  line-height: 1.08;
+}
+
+.oldMoney :global(.couple span) {
+  text-wrap: balance;
+}
+
+.oldMoney :global(.couple i) {
+  margin: 3px 0 2px;
+  color: var(--om-gold);
+  font-family: "Cormorant Garamond", Garamond, Georgia, serif;
+  font-size: 27px;
+  font-style: italic;
+  font-weight: 400;
+}
+
+.oldMoney :global(.divider) {
+  gap: 15px;
+  margin: 37px auto 28px;
+  color: var(--om-gold);
+  font-family: "Cormorant Garamond", Garamond, Georgia, serif;
+  font-size: 15px;
+}
+
+.oldMoney :global(.divider)::before,
+.oldMoney :global(.divider)::after {
+  width: 86px;
+  background: rgba(155,131,93,.52);
+}
+
+.oldMoney :global(.personal) {
+  color: #716558;
+  font-size: 13.5px;
+  font-style: italic;
+  line-height: 1.9;
+}
+
+.oldMoney :global(.date-block) {
+  gap: 30px;
+  margin: 43px 0 15px;
+}
+
+.oldMoney :global(.date-block span) {
+  min-width: 92px;
+  color: #625648;
+  font-family: Arial, sans-serif;
+  font-size: 10px;
+  letter-spacing: .24em;
+  line-height: 1.9;
+}
+
+.oldMoney :global(.date-block strong) {
+  padding: 0 29px;
+  border-color: rgba(155,131,93,.38);
+  color: #4c4034;
+  font-family: "Cormorant Garamond", Garamond, Georgia, serif;
+  font-size: 52px;
+  font-weight: 400;
+  line-height: 1.04;
+}
+
+.oldMoney :global(.time) {
+  color: #746858;
+  font-family: Arial, sans-serif;
+  font-size: 9.5px;
+  letter-spacing: .215em;
+}
+
+.oldMoney :global(.venue) {
+  margin-top: 44px;
+}
+
+.oldMoney :global(.venue h2) {
+  margin-bottom: 24px;
+  color: #453a30;
+  font-family: "Cormorant Garamond", Garamond, Georgia, serif;
+  font-size: 30px;
+  font-weight: 500;
+  letter-spacing: .01em;
+}
+
+.oldMoney :global(.outline-button) {
+  gap: 17px;
+  min-width: 190px;
+  justify-content: center;
+  border-color: rgba(155,131,93,.72);
+  padding: 13px 22px;
+  color: #5c4e3f;
+  background: transparent;
+  font-family: Arial, sans-serif;
+  font-size: 9.5px;
+  letter-spacing: .21em;
+  transition: background .25s ease, color .25s ease, border-color .25s ease;
+}
+
+.oldMoney :global(.outline-button:hover) {
+  border-color: var(--om-gold);
+  background: rgba(155,131,93,.075);
+}
+
+.oldMoney :global(.guestbook) {
+  max-width: 960px;
+  margin-top: 112px;
+  padding: 58px 54px 48px;
+  border-top: 1px solid rgba(155,131,93,.32);
+  border-bottom: 1px solid rgba(155,131,93,.25);
+  background: rgba(250,247,240,.33);
+}
+
+.oldMoney :global(.guestbook h2) {
+  margin-bottom: 12px;
+  color: #43382f;
+  font-family: "Cormorant Garamond", Garamond, Georgia, serif;
+  font-size: clamp(34px, 4vw, 43px);
+  font-weight: 500;
+  letter-spacing: -.01em;
+}
+
+.oldMoney :global(.guestbook header > p:last-child) {
+  color: #75695a;
+  font-size: 13px;
+  line-height: 1.9;
+}
+
+.oldMoney :global(.guestbook-grid) {
+  gap: 68px;
+  margin-top: 48px;
+}
+
+.oldMoney :global(.guestbook label) {
+  margin-bottom: 7px;
+  color: #65594b;
+  font-family: Arial, sans-serif;
+  font-size: 9.5px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+}
+
+.oldMoney :global(.guestbook input),
+.oldMoney :global(.guestbook textarea) {
+  margin-bottom: 29px;
+  border: 0;
+  border-bottom: 1px solid rgba(155,131,93,.48);
+  border-radius: 0;
+  padding: 10px 2px 11px;
+  background: transparent;
+  color: var(--om-ink);
+  font-family: "Libre Baskerville", Baskerville, Georgia, serif;
+  font-size: 14px;
+  line-height: 1.7;
+  outline: none;
+  box-shadow: none;
+}
+
+.oldMoney :global(.guestbook textarea) {
+  min-height: 132px;
+  resize: vertical;
+}
+
+.oldMoney :global(.guestbook input:focus),
+.oldMoney :global(.guestbook textarea:focus) {
+  border-bottom-color: var(--om-gold);
+  box-shadow: 0 1px 0 rgba(155,131,93,.18);
+}
+
+.oldMoney :global(.guestbook input::placeholder),
+.oldMoney :global(.guestbook textarea::placeholder) {
+  color: #a29787;
+  opacity: 1;
+  font-style: italic;
+}
+
+.oldMoney :global(.privacy) {
+  color: #8a7d6b;
+  font-size: 10.5px;
+  line-height: 1.75;
+}
+
+.oldMoney :global(.submit-button) {
+  min-height: 47px;
+  border: 1px solid rgba(155,131,93,.78) !important;
+  border-radius: 0 !important;
+  padding: 14px 18px !important;
+  background: transparent !important;
+  color: #584a3b !important;
+  font-family: Arial, sans-serif !important;
+  font-size: 9.5px !important;
+  font-weight: 400 !important;
+  letter-spacing: .22em !important;
+  transition: background .25s ease, color .25s ease !important;
+}
+
+.oldMoney :global(.submit-button:hover:not(:disabled)) {
+  background: #675844 !important;
+  color: #fffaf1 !important;
+}
+
+.oldMoney :global(.messages) {
+  border-left-color: rgba(155,131,93,.3);
+  padding-left: 44px;
+}
+
+.oldMoney :global(.empty-book > span) {
+  color: rgba(155,131,93,.58);
+  font-family: "Cormorant Garamond", Garamond, serif;
+  font-size: 72px;
+}
+
+.oldMoney :global(.empty-book h3) {
+  color: #4d4136;
+  font-family: "Cormorant Garamond", Garamond, Georgia, serif;
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.oldMoney :global(.wish) {
+  border-bottom-color: rgba(155,131,93,.26);
+}
+
+.oldMoney :global(.wish > p) {
+  color: #4e4338;
+  font-family: "Cormorant Garamond", Garamond, Georgia, serif;
+  font-size: 20px;
+  font-style: italic;
+  line-height: 1.65;
+}
+
+.oldMoney :global(.wish > div) {
+  color: #75695a;
+  font-family: Arial, sans-serif;
+  font-size: 9.5px;
+  letter-spacing: .06em;
+}
+
+.oldMoney :global(footer) {
+  padding: 78px 0 42px;
+  color: #746654;
+}
+
+.oldMoney :global(footer .monogram) {
+  margin-bottom: 16px;
+}
+
+.footerNames {
+  margin-top: 5px !important;
+  color: #514538;
+  font-family: "Cormorant Garamond", Garamond, Georgia, serif;
+  font-size: 19px !important;
+  letter-spacing: .015em;
+}
+
+.oldMoney :global(footer > span) {
+  color: #89795f;
+  font-size: 9px;
+  letter-spacing: .28em;
+}
+
+@media (max-width: 640px) {
+  .oldMoney {
+    padding: 0 12px;
+  }
+
+  .floral {
+    width: 225px;
+    opacity: .075;
+  }
+
+  .floralTop {
+    top: 86px;
+    left: -94px;
+  }
+
+  .floralBottom {
+    right: -100px;
+    bottom: 120px;
+  }
+
+  .oldMoney :global(nav) {
+    padding: 23px 7px 31px;
+  }
+
+  .monogramMark {
+    font-size: 27px;
+  }
+
+  .oldMoney :global(.invitation-card) {
+    padding: 7px;
+  }
+
+  .oldMoney :global(.inner-frame) {
+    padding: 49px 18px 47px;
+  }
+
+  .oldMoney :global(.invitation-card)::before,
+  .oldMoney :global(.invitation-card)::after {
+    width: 24px;
+    height: 24px;
+  }
+
+  .oldMoney :global(.invitation-card)::before {
+    top: 15px;
+    left: 15px;
+  }
+
+  .oldMoney :global(.invitation-card)::after {
+    right: 15px;
+    bottom: 15px;
+  }
+
+  .oldMoney :global(.formal) {
+    margin-bottom: 36px;
+    font-size: 12.5px;
+    line-height: 1.9;
+  }
+
+  .oldMoney :global(.couple) {
+    font-size: clamp(36px, 11vw, 44px);
+    line-height: 1.06;
+  }
+
+  .oldMoney :global(.personal) {
+    font-size: 12.5px;
+  }
+
+  .oldMoney :global(.date-block) {
+    gap: 10px;
+    margin-top: 36px;
+  }
+
+  .oldMoney :global(.date-block strong) {
+    padding: 0 16px;
+    font-size: 45px;
+  }
+
+  .oldMoney :global(.date-block span) {
+    min-width: 60px;
+    font-size: 8px;
+    letter-spacing: .17em;
+  }
+
+  .oldMoney :global(.time) {
+    font-size: 8px;
+    letter-spacing: .16em;
+  }
+
+  .oldMoney :global(.guestbook) {
+    margin-top: 78px;
+    padding: 43px 15px 35px;
+  }
+
+  .oldMoney :global(.guestbook-grid) {
+    gap: 31px;
+    margin-top: 38px;
+  }
+
+  .oldMoney :global(.messages) {
+    padding-left: 0;
+  }
+}
