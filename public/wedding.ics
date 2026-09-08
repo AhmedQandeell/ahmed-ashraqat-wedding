@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Ahmed and Ashraqat//Wedding Invitation//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:ahmed-ashraqat-wedding-20261009@ahmed-qandeel96.workers.dev
+DTSTAMP:20260908T011500Z
+DTSTART;TZID=Africa/Cairo:20261009T200000
+SUMMARY:Ahmed Qandeel & Ashraqat El-Bidwehy Wedding
+LOCATION:Tiba Rose Hotel
+DESCRIPTION:Join us to celebrate the wedding of Ahmed Qandeel and Ashraqat El-Bidwehy at Tiba Rose Hotel.
+URL:https://ahmed-ashraqat-wedding-invitation.ahmed-qandeel96.workers.dev/invitation
+STATUS:CONFIRMED
+END:VEVENT
+END:VCALENDAR
