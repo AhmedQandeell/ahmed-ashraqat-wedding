@@ -28,13 +28,21 @@ jobs:
       - name: Restore uploaded floral background
         shell: bash
         run: |
-          cat tmp/floral-bg-1.txt tmp/floral-bg-2.txt tmp/floral-bg-3.txt tmp/floral-bg-4.txt | base64 --decode > public/floral-envelope-bg.jpg
           python - <<'PY'
+          import base64
+          from pathlib import Path
           from PIL import Image
-          p='public/floral-envelope-bg.jpg'
-          im=Image.open(p)
+
+          out = bytearray()
+          for i in range(1, 5):
+              text = Path(f'tmp/floral-bg-{i}.txt').read_text(encoding='ascii').strip()
+              out.extend(base64.b64decode(text))
+
+          target = Path('public/floral-envelope-bg.jpg')
+          target.write_bytes(out)
+          im = Image.open(target)
           im.verify()
-          print('Floral background verified:', im.size)
+          print('Floral background verified:', im.size, target.stat().st_size, 'bytes')
           PY
 
       - name: Apply stone-ivory envelope treatment
