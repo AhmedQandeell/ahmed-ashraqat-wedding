@@ -1,7 +1,6 @@
 import Link from "next/link";
 import AutoScroll from "./auto-scroll";
 import Guestbook from "./guestbook";
-import calendarStyles from "./calendar.module.css";
 import styles from "./old-money.module.css";
 
 function FloralCorner({ className }: { className: string }) {
@@ -55,6 +54,132 @@ function Monogram() {
   );
 }
 
+function WeddingCalendar() {
+  return (
+    <section
+      aria-label="Wedding date and add to calendar"
+      style={{
+        display: "grid",
+        justifyItems: "center",
+        gap: 14,
+        margin: "42px auto 18px",
+      }}
+    >
+      <div
+        aria-label="Friday, 9 October 2026"
+        style={{
+          position: "relative",
+          width: "min(194px, 70vw)",
+          border: "1px solid rgba(155,131,93,.62)",
+          background: "#fbf8f1",
+          boxShadow: "0 14px 34px rgba(74,59,39,.075)",
+          textAlign: "center",
+          overflow: "visible",
+        }}
+      >
+        <span
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            top: -9,
+            left: 43,
+            width: 3,
+            height: 19,
+            borderRadius: 99,
+            background: "#9b835d",
+            boxShadow: "0 0 0 3px #f7f2e9",
+            zIndex: 3,
+          }}
+        />
+        <span
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            top: -9,
+            right: 43,
+            width: 3,
+            height: 19,
+            borderRadius: 99,
+            background: "#9b835d",
+            boxShadow: "0 0 0 3px #f7f2e9",
+            zIndex: 3,
+          }}
+        />
+
+        <div
+          style={{
+            padding: "17px 12px 13px",
+            borderBottom: "1px solid rgba(155,131,93,.34)",
+            background: "#eee6d8",
+            color: "#655747",
+            fontFamily: "Arial, sans-serif",
+            fontSize: 9,
+            letterSpacing: ".31em",
+          }}
+        >
+          OCTOBER
+        </div>
+
+        <time
+          dateTime="2026-10-09"
+          style={{
+            display: "block",
+            padding: "14px 12px 0",
+            color: "#453a30",
+            fontFamily: '"Cormorant Garamond", Garamond, Georgia, serif',
+            fontSize: "clamp(62px, 18vw, 72px)",
+            fontWeight: 400,
+            letterSpacing: "-.035em",
+            lineHeight: .98,
+          }}
+        >
+          09
+        </time>
+
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 10,
+            padding: "10px 12px 17px",
+            color: "#736653",
+            fontFamily: "Arial, sans-serif",
+            fontSize: 8,
+            letterSpacing: ".2em",
+          }}
+        >
+          <span>FRIDAY</span>
+          <span aria-hidden="true" style={{ color: "#a58c66", letterSpacing: 0 }}>•</span>
+          <span>2026</span>
+        </div>
+      </div>
+
+      <a
+        href="/wedding.ics"
+        download="Ahmed-Ashraqat-Wedding.ics"
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 11,
+          minWidth: "min(194px, 70vw)",
+          padding: "7px 2px 9px",
+          borderBottom: "1px solid rgba(155,131,93,.72)",
+          color: "#5f5142",
+          textDecoration: "none",
+          fontFamily: "Arial, sans-serif",
+          fontSize: 8.5,
+          fontWeight: 400,
+          letterSpacing: ".2em",
+        }}
+      >
+        ADD TO CALENDAR <span aria-hidden="true" style={{ color: "#9b835d", fontSize: 14, letterSpacing: 0 }}>＋</span>
+      </a>
+    </section>
+  );
+}
+
 export default function Invitation() {
   return (
     <main className={`${styles.oldMoney} invitation-page`}>
@@ -99,25 +224,7 @@ export default function Invitation() {
                 <br className="desktop-break" /> all the more meaningful.
               </p>
 
-              <div className={calendarStyles.calendarSection}>
-                <div className={calendarStyles.calendarCard} aria-label="Friday, 9 October 2026">
-                  <div className={calendarStyles.calendarRings} aria-hidden="true">
-                    <span />
-                    <span />
-                  </div>
-                  <div className={calendarStyles.calendarMonth}>OCTOBER</div>
-                  <div className={calendarStyles.calendarDate}>09</div>
-                  <div className={calendarStyles.calendarMeta}>
-                    <span>FRIDAY</span>
-                    <i aria-hidden="true">•</i>
-                    <span>2026</span>
-                  </div>
-                </div>
-
-                <a className={calendarStyles.calendarButton} href="/wedding.ics">
-                  ADD TO CALENDAR <span aria-hidden="true">＋</span>
-                </a>
-              </div>
+              <WeddingCalendar />
 
               <p className="time">AT EIGHT O’CLOCK IN THE EVENING</p>
 
