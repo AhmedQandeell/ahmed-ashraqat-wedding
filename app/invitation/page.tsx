@@ -58,81 +58,84 @@ export default function Invitation() {
   return (
     <main className={`${styles.oldMoney} invitation-page`}>
       <AutoScroll />
-      <FloralCorner className={`${styles.floral} ${styles.floralTop}`} />
-      <FloralCorner className={`${styles.floral} ${styles.floralBottom}`} />
 
-      <div className={styles.content}>
-        <nav>
-          <Link href="/" aria-label="Back to envelope">
-            <Monogram />
-          </Link>
-          <a href="#guestbook">GUESTBOOK</a>
-        </nav>
+      <div data-auto-scroll-track style={{ position: "relative" }}>
+        <FloralCorner className={`${styles.floral} ${styles.floralTop}`} />
+        <FloralCorner className={`${styles.floral} ${styles.floralBottom}`} />
 
-        <article className="invitation-card">
-          <div className="inner-frame">
-            <p className="eyebrow">IN THE NAME OF ALLAH, THE MOST MERCIFUL</p>
-            <p className="welcome">With love, we welcome you.</p>
-            <p className="formal">
-              Together with our families,
-              <br />
-              we request the pleasure of your company
-              <br />
-              as we celebrate our wedding.
-            </p>
+        <div className={styles.content}>
+          <nav>
+            <Link href="/" aria-label="Back to envelope">
+              <Monogram />
+            </Link>
+            <a href="#guestbook">GUESTBOOK</a>
+          </nav>
 
-            <h1 className="couple" style={{ fontSize: "clamp(27px, 8.2vw, 50px)" }}>
-              <span style={{ whiteSpace: "nowrap" }}>Ahmed Qandeel</span>
-              <i>&</i>
-              <span style={{ whiteSpace: "nowrap" }}>Ashraqat El-Bidwehy</span>
-            </h1>
-
-            <div className="divider" aria-hidden="true">
-              ❦
-            </div>
-
-            <p className="personal">
-              Your presence will make our celebration
-              <br className="desktop-break" /> all the more meaningful.
-            </p>
-
-            <div className="date-block">
-              <span>FRIDAY</span>
-              <strong>09</strong>
-              <span>
-                OCTOBER
+          <article className="invitation-card">
+            <div className="inner-frame">
+              <p className="eyebrow">IN THE NAME OF ALLAH, THE MOST MERCIFUL</p>
+              <p className="welcome">With love, we welcome you.</p>
+              <p className="formal">
+                Together with our families,
                 <br />
-                2026
-              </span>
+                we request the pleasure of your company
+                <br />
+                as we celebrate our wedding.
+              </p>
+
+              <h1 className="couple" style={{ fontSize: "clamp(27px, 8.2vw, 50px)" }}>
+                <span style={{ whiteSpace: "nowrap" }}>Ahmed Qandeel</span>
+                <i>&</i>
+                <span style={{ whiteSpace: "nowrap" }}>Ashraqat El-Bidwehy</span>
+              </h1>
+
+              <div className="divider" aria-hidden="true">
+                ❦
+              </div>
+
+              <p className="personal">
+                Your presence will make our celebration
+                <br className="desktop-break" /> all the more meaningful.
+              </p>
+
+              <div className="date-block">
+                <span>FRIDAY</span>
+                <strong>09</strong>
+                <span>
+                  OCTOBER
+                  <br />
+                  2026
+                </span>
+              </div>
+
+              <p className="time">AT EIGHT O’CLOCK IN THE EVENING</p>
+
+              <div className="venue">
+                <p className="eyebrow">THE CELEBRATION</p>
+                <h2>Tiba Rose Hotel</h2>
+                <a
+                  className="outline-button"
+                  href="https://maps.app.goo.gl/BrGWPSXwrq8SqrQB7"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  VIEW LOCATION <span aria-hidden="true">↗</span>
+                </a>
+              </div>
             </div>
+          </article>
 
-            <p className="time">AT EIGHT O’CLOCK IN THE EVENING</p>
+          <Guestbook />
 
-            <div className="venue">
-              <p className="eyebrow">THE CELEBRATION</p>
-              <h2>Tiba Rose Hotel</h2>
-              <a
-                className="outline-button"
-                href="https://maps.app.goo.gl/BrGWPSXwrq8SqrQB7"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                VIEW LOCATION <span aria-hidden="true">↗</span>
-              </a>
+          <footer>
+            <div className="monogram">
+              <Monogram />
             </div>
-          </div>
-        </article>
-
-        <Guestbook />
-
-        <footer>
-          <div className="monogram">
-            <Monogram />
-          </div>
-          <p>With love and gratitude</p>
-          <p className={styles.footerNames}>Ahmed & Ashraqat</p>
-          <span>09 · 10 · 2026</span>
-        </footer>
+            <p>With love and gratitude</p>
+            <p className={styles.footerNames}>Ahmed & Ashraqat</p>
+            <span>09 · 10 · 2026</span>
+          </footer>
+        </div>
       </div>
     </main>
   );
