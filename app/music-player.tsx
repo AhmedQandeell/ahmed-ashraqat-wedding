@@ -1,119 +1,165 @@
 "use client";
 
+import Script from "next/script";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 const VIDEO_ID = "GMihmMfeazY";
 const START_AT_SECONDS = 28;
 const START_EVENT = "wedding-music-start";
+const VOLUME = 28;
 
 export default function MusicPlayer() {
   const pathname = usePathname();
-  const iframeRef = useRef<HTMLIFrameElement | null>(null);
-  const mutedRef = useRef(true);
-  const playerStateRef = useRef(-1);
+  const playerRef = useRef<any>(null);
+  const readyRef = useRef(false);
+  const requestedRef = useRef(false);
+  const [ready, setReady] = useState(false);
+  const [requested, setRequested] = useState(false);
   const [playing, setPlaying] = useState(false);
 
-  const post = (payload: object) => {
-    iframeRef.current?.contentWindow?.postMessage(JSON.stringify(payload), "*");
+  const syncState = (player = playerRef.current) => {
+    if (!player) return;
+    try {
+      setPlaying(player.getPlayerState() === 1 && !player.isMuted());
+    } catch {
+      setPlaying(false);
+    }
   };
 
-  const command = (func: string, args: unknown[] = []) => {
-    post({ event: "command", func, args });
+  const playAudible = (seekToStart: boolean) => {
+    const player = playerRef.current;
+    if (!readyRef.current || !player) return false;
+
+    requestedRef.current = true;
+    setRequested(true);
+
+    try {
+      if (seekToStart) player.seekTo(START_AT_SECONDS, true);
+      player.setVolume(VOLUME);
+      player.unMute();
+      player.playVideo();
+      window.setTimeout(() => syncState(player), 160);
+      return true;
+    } catch {
+      setPlaying(false);
+      return false;
+    }
   };
 
-  const makeAudible = (seek = false) => {
-    if (seek) command("seekTo", [START_AT_SECONDS, true]);
-    command("setVolume", [28]);
-    command("unMute");
-    command("playVideo");
+  const initializePlayer = () => {
+    const YT = (window as any).YT;
+    if (!YT?.Player || playerRef.current) return;
+
+    playerRef.current = new YT.Player("wedding-youtube-player", {
+      width: "2",
+      height: "2",
+      videoId: VIDEO_ID,
+      playerVars: {
+        start: START_AT_SECONDS,
+        playsinline: 1,
+        controls: 0,
+        disablekb: 1,
+        fs: 0,
+        rel: 0,
+        loop: 1,
+        playlist: VIDEO_ID,
+        origin: window.location.origin,
+      },
+      events: {
+        onReady: (event: any) => {
+          playerRef.current = event.target;
+          readyRef.current = true;
+          setReady(true);
+
+          try {
+            event.target.setVolume(VOLUME);
+            event.target.seekTo(START_AT_SECONDS, true);
+            event.target.pauseVideo();
+          } catch {
+            // The visible control below remains the fallback.
+          }
+
+          // If the guest tapped the envelope before YouTube finished loading,
+          // make a best-effort start now. Browsers that require a fresh gesture
+          // will leave the PLAY MUSIC control visible for one-tap recovery.
+          if (requestedRef.current) {
+            playAudible(true);
+          }
+        },
+        onStateChange: (event: any) => {
+          try {
+            setPlaying(event.data === 1 && !event.target.isMuted());
+          } catch {
+            setPlaying(false);
+          }
+        },
+        onError: () => {
+          setPlaying(false);
+        },
+      },
+    });
   };
 
   useEffect(() => {
-    const syncPlayingState = () => {
-      setPlaying(playerStateRef.current === 1 && !mutedRef.current);
-    };
-
     const startMusic = () => {
-      // Runs from the envelope tap. The iframe is already playing muted, so this
-      // only needs to seek, unmute and continue playback.
-      makeAudible(true);
-    };
-
-    const onMessage = (event: MessageEvent) => {
-      if (
-        event.origin !== "https://www.youtube.com" &&
-        event.origin !== "https://www.youtube-nocookie.com"
-      ) {
-        return;
-      }
-
-      let data: any = event.data;
-      if (typeof data === "string") {
-        try {
-          data = JSON.parse(data);
-        } catch {
-          return;
-        }
-      }
-
-      if (data?.event !== "infoDelivery" || !data?.info) return;
-
-      if (typeof data.info.muted === "boolean") {
-        mutedRef.current = data.info.muted;
-      }
-      if (typeof data.info.playerState === "number") {
-        playerStateRef.current = data.info.playerState;
-      }
-      syncPlayingState();
+      requestedRef.current = true;
+      setRequested(true);
+      playAudible(true);
     };
 
     window.addEventListener(START_EVENT, startMusic);
-    window.addEventListener("message", onMessage);
-
-    return () => {
-      window.removeEventListener(START_EVENT, startMusic);
-      window.removeEventListener("message", onMessage);
-    };
+    return () => window.removeEventListener(START_EVENT, startMusic);
   }, []);
 
   const toggleMusic = () => {
-    if (playing) {
-      command("pauseVideo");
-      playerStateRef.current = 2;
-      setPlaying(false);
+    const player = playerRef.current;
+
+    if (playing && player) {
+      try {
+        player.pauseVideo();
+      } finally {
+        setPlaying(false);
+      }
       return;
     }
 
-    // Direct button taps are the guaranteed mobile fallback when the browser
-    // refuses to unmute an embedded player automatically.
-    makeAudible(false);
+    requestedRef.current = true;
+    setRequested(true);
+
+    // This runs directly from the guest's tap, which is the most reliable
+    // way to unlock audio on iOS Safari, Android browsers and in-app browsers.
+    if (!playAudible(false) && !ready) {
+      initializePlayer();
+    }
   };
+
+  const invitationOpen = pathname.startsWith("/invitation");
 
   return (
     <>
-      <iframe
-        ref={iframeRef}
-        src={`https://www.youtube-nocookie.com/embed/${VIDEO_ID}?enablejsapi=1&playsinline=1&controls=0&disablekb=1&fs=0&rel=0&loop=1&playlist=${VIDEO_ID}&start=${START_AT_SECONDS}&autoplay=1&mute=1`}
-        title="Wedding music"
-        allow="autoplay; encrypted-media"
+      <Script
+        src="https://www.youtube.com/iframe_api"
+        strategy="afterInteractive"
+        onReady={initializePlayer}
+      />
+
+      <div
+        id="wedding-youtube-player"
         aria-hidden="true"
-        tabIndex={-1}
-        loading="eager"
-        onLoad={() => post({ event: "listening" })}
         style={{
           position: "fixed",
-          width: 1,
-          height: 1,
-          left: -10,
-          bottom: -10,
-          opacity: 0,
+          left: -9999,
+          top: 0,
+          width: 2,
+          height: 2,
+          opacity: 0.01,
           pointerEvents: "none",
-          border: 0,
+          overflow: "hidden",
         }}
       />
 
-      {pathname.startsWith("/invitation") ? (
+      {invitationOpen ? (
         <button
           type="button"
           onClick={toggleMusic}
@@ -123,19 +169,19 @@ export default function MusicPlayer() {
             position: "fixed",
             right: 16,
             bottom: 18,
-            zIndex: 50,
-            minWidth: playing ? 42 : 118,
+            zIndex: 100,
+            minWidth: playing ? 42 : 122,
             height: 42,
             padding: playing ? 0 : "0 14px",
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "center",
             gap: 7,
-            border: "1px solid rgba(155,131,93,.68)",
+            border: "1px solid rgba(155,131,93,.72)",
             borderRadius: 22,
-            background: "rgba(250,247,240,.94)",
+            background: "rgba(250,247,240,.96)",
             color: "#5c4e3f",
-            boxShadow: "0 8px 24px rgba(74,59,39,.10)",
+            boxShadow: "0 8px 24px rgba(74,59,39,.12)",
             backdropFilter: "blur(7px)",
             WebkitBackdropFilter: "blur(7px)",
             cursor: "pointer",
@@ -144,7 +190,7 @@ export default function MusicPlayer() {
           }}
         >
           <span aria-hidden="true">{playing ? "♫" : "♩"}</span>
-          {!playing ? <span>PLAY MUSIC</span> : null}
+          {!playing ? <span>{ready ? "PLAY MUSIC" : "MUSIC LOADING"}</span> : null}
         </button>
       ) : null}
     </>
