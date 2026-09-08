@@ -4,8 +4,25 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type MouseEvent } from "react";
 
-const envelopeGrade =
-  "sepia(.22) saturate(.75) brightness(.88) contrast(1.06) drop-shadow(0 20px 24px rgba(0,0,0,.34))";
+// Map the original photographic paper to stone ivory without flattening its grain.
+// Keep the lower tones warm so the original metallic seal remains champagne gold.
+function toneTable(anchors: readonly (readonly [number, number])[]) {
+  return Array.from({ length: 256 }, (_, value) => {
+    const upper = anchors.findIndex(([input]) => input >= value);
+    if (upper === 0) return (anchors[0][1] / 255).toFixed(5);
+    const [x0, y0] = anchors[upper - 1];
+    const [x1, y1] = anchors[upper];
+    return ((y0 + (y1 - y0) * (value - x0) / (x1 - x0)) / 255).toFixed(5);
+  }).join(" ");
+}
+
+const paperTones = {
+  red: toneTable([[0, 0], [180, 169], [220, 188], [240, 214], [250, 226], [255, 232]]),
+  green: toneTable([[0, 0], [165, 151], [212, 175], [234, 203], [246, 216], [255, 226]]),
+  blue: toneTable([[0, 0], [125, 112], [203, 157], [226, 187], [240, 202], [255, 218]]),
+};
+
+const envelopeGrade = "url(#stone-paper)";
 
 export default function Home() {
   const router = useRouter();
@@ -63,6 +80,7 @@ export default function Home() {
         ? "transform 850ms cubic-bezier(.22,.61,.36,1), opacity 180ms ease 950ms"
         : "none",
     willChange: opening ? "transform, opacity" : "auto",
+    filter: "drop-shadow(0 20px 24px rgba(8,7,5,.5))",
   } as const;
 
   const openStateStyle = {
@@ -89,13 +107,24 @@ export default function Home() {
       style={{
         backgroundColor: "#171511",
         backgroundImage:
-          "linear-gradient(180deg, rgba(17,15,12,.38) 0%, rgba(17,15,12,.16) 38%, rgba(17,15,12,.31) 100%), url('/floral-envelope-bg.webp')",
-        backgroundSize: "cover",
+          "linear-gradient(180deg, rgba(17,15,12,.3) 0%, rgba(17,15,12,.08) 38%, rgba(17,15,12,.25) 100%), var(--wedding-floral)",
+        backgroundSize: "auto, auto max(100svh, 1200px)",
         backgroundPosition: "center 45%",
-        backgroundRepeat: "no-repeat",
+        backgroundRepeat: "no-repeat, repeat",
         color: "#E2D8CA",
       }}
     >
+      <svg width="0" height="0" aria-hidden="true" focusable="false" style={{ position: "absolute" }}>
+        <defs>
+          <filter id="stone-paper" colorInterpolationFilters="sRGB">
+            <feComponentTransfer>
+              <feFuncR type="table" tableValues={paperTones.red} />
+              <feFuncG type="table" tableValues={paperTones.green} />
+              <feFuncB type="table" tableValues={paperTones.blue} />
+            </feComponentTransfer>
+          </filter>
+        </defs>
+      </svg>
       <div
         className="eyebrow"
         style={{
@@ -179,7 +208,7 @@ export default function Home() {
             background: "rgba(22,19,15,.28)",
             color: "#E2D8CA",
             fontFamily: "Arial, sans-serif",
-            fontSize: 9.5,
+            fontSize: 12,
             fontWeight: 400,
             letterSpacing: ".22em",
             lineHeight: 1.5,

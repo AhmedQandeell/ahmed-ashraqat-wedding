@@ -1,11 +1,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Libre+Baskerville:ital,wght@0,400;1,400&display=swap");
 
 .oldMoney {
-  --om-paper: #faf7f0;
-  --om-background: #f3f0e8;
+  --om-paper: var(--wedding-paper);
+  --om-background: #171511;
   --om-ink: #3c342c;
-  --om-muted: #6e6254;
-  --om-gold: #9b835d;
+  --om-muted: #574c40;
+  --om-gold: var(--wedding-champagne);
   --om-gold-soft: #cdbE9f;
   --om-botanical: #a79a79;
   position: relative;
@@ -15,9 +15,9 @@
   padding: 0 28px;
   color: var(--om-ink);
   background:
-    radial-gradient(circle at 12% 8%, rgba(155,131,93,.055), transparent 28%),
-    radial-gradient(circle at 88% 84%, rgba(167,154,121,.05), transparent 30%),
-    linear-gradient(180deg, #f6f2ea 0%, var(--om-background) 52%, #f1ede4 100%);
+    linear-gradient(rgba(17,15,12,.22), rgba(17,15,12,.42)),
+    var(--wedding-floral) center 45% / auto max(100svh, 1200px) repeat,
+    var(--om-background);
   font-family: "Libre Baskerville", Baskerville, "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, serif;
 }
 
@@ -39,6 +39,7 @@
 }
 
 .floral {
+  display: none;
   position: absolute;
   z-index: 0;
   pointer-events: none;
@@ -64,7 +65,7 @@
 }
 
 .oldMoney :global(nav > a) {
-  color: #5e5144;
+  color: var(--wedding-highlight);
   font-family: Arial, sans-serif;
   font-size: 10px;
   font-weight: 400;
@@ -95,8 +96,8 @@
   margin: 0 auto;
   padding: 10px;
   border: 1px solid rgba(155,131,93,.82);
-  background: var(--om-paper);
-  box-shadow: 0 24px 70px rgba(74,59,39,.065);
+  background: linear-gradient(135deg, var(--wedding-highlight), var(--om-paper) 55%, #cec2b1);
+  box-shadow: 0 24px 60px rgba(8,7,5,.42);
 }
 
 .oldMoney :global(.invitation-card)::before,
@@ -269,7 +270,8 @@
   padding: 58px 54px 48px;
   border-top: 1px solid rgba(155,131,93,.32);
   border-bottom: 1px solid rgba(155,131,93,.25);
-  background: rgba(250,247,240,.33);
+  background: linear-gradient(135deg, var(--wedding-highlight), var(--om-paper));
+  box-shadow: 0 24px 60px rgba(8,7,5,.3);
 }
 
 .oldMoney :global(.guestbook h2) {
@@ -330,13 +332,13 @@
 
 .oldMoney :global(.guestbook input::placeholder),
 .oldMoney :global(.guestbook textarea::placeholder) {
-  color: #a29787;
+  color: #746858;
   opacity: 1;
   font-style: italic;
 }
 
 .oldMoney :global(.privacy) {
-  color: #8a7d6b;
+  color: #65594b;
   font-size: 10.5px;
   line-height: 1.75;
 }
@@ -399,7 +401,7 @@
 
 .oldMoney :global(footer) {
   padding: 78px 0 42px;
-  color: #746654;
+  color: var(--wedding-highlight);
 }
 
 .oldMoney :global(footer .monogram) {
@@ -408,16 +410,30 @@
 
 .footerNames {
   margin-top: 5px !important;
-  color: #514538;
+  color: var(--wedding-highlight);
   font-family: "Cormorant Garamond", Garamond, Georgia, serif;
   font-size: 19px !important;
   letter-spacing: .015em;
 }
 
 .oldMoney :global(footer > span) {
-  color: #89795f;
+  color: var(--wedding-fold);
   font-size: 9px;
   letter-spacing: .28em;
+}
+
+.oldMoney :global(nav) .monogramMark,
+.oldMoney :global(footer) .monogramMark {
+  color: var(--wedding-highlight);
+}
+
+.oldMoney :global(nav) .monogramMark i,
+.oldMoney :global(footer) .monogramMark i {
+  color: var(--om-gold-soft);
+}
+
+.oldMoney :global(nav a:focus-visible) {
+  outline-color: var(--wedding-highlight);
 }
 
 @media (max-width: 640px) {
