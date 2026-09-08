@@ -21,40 +21,52 @@ export default function MusicPlayer() {
     );
   };
 
-  const startMusic = () => {
-    setRequested(true);
-    setPlaying(true);
+  useEffect(() => {
+    const startMusic = () => {
+      setRequested(true);
+      setPlaying(true);
 
-    const playFromBeginning = () => {
-      command("seekTo", [START_AT_SECONDS, true]);
-      command("setVolume", [28]);
-      command("playVideo");
+      const sendStartCommands = (includeSeek: boolean) => {
+        const player = iframeRef.current?.contentWindow;
+        if (!player) return;
+
+        if (includeSeek) {
+          player.postMessage(
+            JSON.stringify({ event: "command", func: "seekTo", args: [START_AT_SECONDS, true] }),
+            "*",
+          );
+        }
+        player.postMessage(
+          JSON.stringify({ event: "command", func: "setVolume", args: [28] }),
+          "*",
+        );
+        player.postMessage(
+          JSON.stringify({ event: "command", func: "playVideo", args: [] }),
+          "*",
+        );
+      };
+
+      // First attempt runs directly from the user's envelope tap.
+      sendStartCommands(true);
+
+      if (retryTimer.current) clearInterval(retryTimer.current);
+      let attempts = 0;
+      retryTimer.current = setInterval(() => {
+        attempts += 1;
+        sendStartCommands(false);
+        if (attempts >= 8 && retryTimer.current) {
+          clearInterval(retryTimer.current);
+          retryTimer.current = null;
+        }
+      }, 180);
     };
 
-    // Send immediately from the envelope tap, then briefly retry while the
-    // YouTube iframe finishes becoming API-ready on slower mobile connections.
-    playFromBeginning();
-    if (retryTimer.current) clearInterval(retryTimer.current);
-
-    let attempts = 0;
-    retryTimer.current = setInterval(() => {
-      attempts += 1;
-      command("setVolume", [28]);
-      command("playVideo");
-      if (attempts >= 8 && retryTimer.current) {
-        clearInterval(retryTimer.current);
-        retryTimer.current = null;
-      }
-    }, 180);
-  };
-
-  useEffect(() => {
     window.addEventListener(START_EVENT, startMusic);
     return () => {
       window.removeEventListener(START_EVENT, startMusic);
       if (retryTimer.current) clearInterval(retryTimer.current);
     };
-  });
+  }, []);
 
   const toggleMusic = () => {
     if (playing) {
@@ -75,6 +87,7 @@ export default function MusicPlayer() {
         allow="autoplay; encrypted-media"
         aria-hidden="true"
         tabIndex={-1}
+        loading="eager"
         style={{
           position: "fixed",
           width: 1,
