@@ -172,3 +172,5 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+# Verification trigger only; preview mode does not edit the envelope image.
