@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type MouseEvent } from "react";
 
+const floralBackgroundUrl = new URL("../public/floral-envelope-bg.jpg", import.meta.url).href;
+
 // Map the original photographic paper to stone ivory without flattening its grain.
 // Keep the lower tones warm so the original metallic seal remains champagne gold.
 function toneTable(anchors: readonly (readonly [number, number])[]) {
@@ -106,8 +108,7 @@ export default function Home() {
       className={`envelope-page${opening ? " is-opening" : ""}${reducedMotion ? " reduce-opening" : ""}`}
       style={{
         backgroundColor: "#4A4037",
-        backgroundImage:
-          "linear-gradient(180deg, rgba(24,20,17,.10) 0%, rgba(24,20,17,.04) 42%, rgba(24,20,17,.15) 100%), url('/floral-envelope-bg.jpg')",
+        backgroundImage: `linear-gradient(180deg, rgba(24,20,17,.10) 0%, rgba(24,20,17,.04) 42%, rgba(24,20,17,.15) 100%), url("${floralBackgroundUrl}")`,
         backgroundSize: "cover, cover",
         backgroundPosition: "center center, center center",
         backgroundRepeat: "no-repeat, no-repeat",
