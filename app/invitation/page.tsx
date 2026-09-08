@@ -79,10 +79,10 @@ export default function Invitation() {
               as we celebrate our wedding.
             </p>
 
-            <h1 className="couple">
-              <span>Ahmed Qandeel</span>
+            <h1 className="couple" style={{ fontSize: "clamp(27px, 8.2vw, 50px)" }}>
+              <span style={{ whiteSpace: "nowrap" }}>Ahmed Qandeel</span>
               <i>&</i>
-              <span>Ashraqat El-Bidwehy</span>
+              <span style={{ whiteSpace: "nowrap" }}>Ashraqat El-Bidwehy</span>
             </h1>
 
             <div className="divider" aria-hidden="true">
