@@ -1,4 +1,5 @@
 import Link from "next/link";
+import AutoScroll from "./auto-scroll";
 import Guestbook from "./guestbook";
 import styles from "./old-money.module.css";
 
@@ -56,6 +57,7 @@ function Monogram() {
 export default function Invitation() {
   return (
     <main className={`${styles.oldMoney} invitation-page`}>
+      <AutoScroll />
       <FloralCorner className={`${styles.floral} ${styles.floralTop}`} />
       <FloralCorner className={`${styles.floral} ${styles.floralBottom}`} />
 
