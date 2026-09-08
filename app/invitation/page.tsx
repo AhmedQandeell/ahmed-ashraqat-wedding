@@ -236,10 +236,47 @@ function WeddingCalendar() {
 
 export default function Invitation() {
   return (
-    <main className={`${styles.oldMoney} invitation-page`}>
+    <main
+      className={`${styles.oldMoney} invitation-page`}
+      style={{
+        position: "relative",
+        isolation: "isolate",
+        background: "transparent",
+      }}
+    >
+      <img
+        src="/take-my-hand.jpg"
+        alt=""
+        aria-hidden="true"
+        loading="eager"
+        decoding="async"
+        draggable={false}
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 0,
+          width: "100vw",
+          height: "100vh",
+          objectFit: "cover",
+          objectPosition: "center center",
+          pointerEvents: "none",
+        }}
+      />
+      <span
+        aria-hidden="true"
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 1,
+          pointerEvents: "none",
+          background:
+            "linear-gradient(180deg, rgba(246,242,234,.80) 0%, rgba(243,240,232,.76) 52%, rgba(241,237,228,.82) 100%)",
+        }}
+      />
+
       <AutoScroll />
 
-      <div data-auto-scroll-track style={{ position: "relative" }}>
+      <div data-auto-scroll-track style={{ position: "relative", zIndex: 2 }}>
         <FloralCorner className={`${styles.floral} ${styles.floralTop}`} />
         <FloralCorner className={`${styles.floral} ${styles.floralBottom}`} />
 
