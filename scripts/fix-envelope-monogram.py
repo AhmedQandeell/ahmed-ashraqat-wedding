@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import base64
 import io
+import os
 from pathlib import Path
 
 import cv2
@@ -25,7 +26,6 @@ def locate_seal(bgr: np.ndarray) -> tuple[int, int, int]:
     sat = hsv[:, :, 1]
     val = hsv[:, :, 2]
 
-    # Warm gold/brown wax is substantially more saturated than the ivory paper.
     mask = (
         (hue >= 5)
         & (hue <= 40)
@@ -65,7 +65,6 @@ def locate_seal(bgr: np.ndarray) -> tuple[int, int, int]:
         _, cx, cy, diameter = candidates[0]
         return cx, cy, diameter
 
-    # Conservative fallback based on the known original artwork layout.
     return int(round(w * 0.5)), int(round(h * 0.53)), int(round(w * 0.15))
 
 
@@ -89,6 +88,20 @@ def find_font(max_width: int, max_height: int, text: str) -> ImageFont.FreeTypeF
     return ImageFont.truetype(font_path, size=10)
 
 
+def write_preview(pil: Image.Image, cx: int, cy: int, diameter: int) -> None:
+    w, h = pil.size
+    half_w = int(diameter * 0.9)
+    half_h = int(diameter * 0.68)
+    left, right = max(0, cx - half_w), min(w, cx + half_w)
+    top, bottom = max(0, cy - half_h), min(h, cy + half_h)
+    preview = pil.crop((left, top, right, bottom))
+    preview.thumbnail((520, 360), Image.Resampling.LANCZOS)
+    buffer = io.BytesIO()
+    preview.save(buffer, format="JPEG", quality=90, optimize=True)
+    PREVIEW_PATH.parent.mkdir(parents=True, exist_ok=True)
+    PREVIEW_PATH.write_text(base64.b64encode(buffer.getvalue()).decode("ascii"), encoding="ascii")
+
+
 def main() -> None:
     raw = cv2.imread(str(IMAGE_PATH), cv2.IMREAD_UNCHANGED)
     if raw is None:
@@ -102,8 +115,11 @@ def main() -> None:
     cx, cy, diameter = locate_seal(bgr)
     print(f"Detected seal center=({cx},{cy}) diameter={diameter} image={w}x{h}")
 
-    # Limit editing to the inner face of the wax seal. This removes only the
-    # original A&Q lettering and leaves the outer wax rim / envelope untouched.
+    if os.getenv("WEDDING_PREVIEW_ONLY") == "1":
+        pil = Image.fromarray(cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB))
+        write_preview(pil, cx, cy, diameter)
+        return
+
     gray = cv2.cvtColor(bgr, cv2.COLOR_BGR2GRAY)
     yy, xx = np.ogrid[:h, :w]
     rx = max(20, int(diameter * 0.37))
@@ -116,16 +132,12 @@ def main() -> None:
     dark = gray < threshold
     text_mask = (inner & dark).astype(np.uint8) * 255
 
-    # Include anti-aliased edges of the original letters while feathering the
-    # reconstruction from the surrounding wax texture.
     kernel_size = max(3, int(round(diameter * 0.024)) | 1)
     kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (kernel_size, kernel_size))
     text_mask = cv2.dilate(text_mask, kernel, iterations=1)
     radius = max(3, int(round(diameter * 0.035)))
     cleaned = cv2.inpaint(bgr, text_mask, radius, cv2.INPAINT_TELEA)
 
-    # Sample the original lettering tone before inpainting. Fall back to the
-    # same muted brown-gold used throughout the invitation.
     dark_pixels = original[text_mask > 0]
     if len(dark_pixels):
         b, g, r = np.median(dark_pixels, axis=0)
@@ -144,8 +156,6 @@ def main() -> None:
     tx = cx - tw / 2 - box[0]
     ty = cy - th / 2 - box[1] - diameter * 0.006
 
-    # A faint lower highlight keeps the lettering integrated with the wax rather
-    # than looking like a separate label pasted over the image.
     highlight = tuple(min(255, c + 58) for c in rgb_color)
     draw.text((tx + 1, ty + 1), text, font=font, fill=highlight)
     draw.text((tx, ty), text, font=font, fill=rgb_color)
@@ -157,19 +167,7 @@ def main() -> None:
         result = result_bgr
 
     cv2.imwrite(str(IMAGE_PATH), result, [cv2.IMWRITE_PNG_COMPRESSION, 8])
-
-    # Commit a small text-encoded preview so the result can be inspected through
-    # the GitHub connector without downloading the full binary PNG.
-    half_w = int(diameter * 0.9)
-    half_h = int(diameter * 0.68)
-    left, right = max(0, cx - half_w), min(w, cx + half_w)
-    top, bottom = max(0, cy - half_h), min(h, cy + half_h)
-    preview = pil.crop((left, top, right, bottom))
-    preview.thumbnail((520, 360), Image.Resampling.LANCZOS)
-    buffer = io.BytesIO()
-    preview.save(buffer, format="JPEG", quality=88, optimize=True)
-    PREVIEW_PATH.parent.mkdir(parents=True, exist_ok=True)
-    PREVIEW_PATH.write_text(base64.b64encode(buffer.getvalue()).decode("ascii"), encoding="ascii")
+    write_preview(pil, cx, cy, diameter)
 
 
 if __name__ == "__main__":
