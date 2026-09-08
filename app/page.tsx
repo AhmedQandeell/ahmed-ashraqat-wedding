@@ -126,8 +126,27 @@ export default function Home() {
             draggable={false}
           />
         </span>
-        <span className="open-label" aria-live="polite">
-          {opening ? "OPENING YOUR INVITATION…" : <>OPEN YOUR INVITATION <span aria-hidden="true">↗</span></>}
+        <span
+          className="open-label"
+          aria-live="polite"
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            minWidth: 220,
+            minHeight: 47,
+            border: "1px solid rgba(155,131,93,.78)",
+            padding: "14px 18px",
+            background: "transparent",
+            color: "#584a3b",
+            fontFamily: "Arial, sans-serif",
+            fontSize: 9.5,
+            fontWeight: 400,
+            letterSpacing: ".22em",
+            lineHeight: 1.5,
+          }}
+        >
+          {opening ? "OPENING YOUR INVITATION…" : "OPEN YOUR INVITATION"}
         </span>
       </Link>
     </main>
