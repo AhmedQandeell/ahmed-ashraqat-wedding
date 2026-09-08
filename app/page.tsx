@@ -4,8 +4,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type MouseEvent } from "react";
 
-const floralBackgroundUrl = new URL("../public/floral-envelope-bg.jpg", import.meta.url).href;
-
 // Map the original photographic paper to stone ivory without flattening its grain.
 // Keep the lower tones warm so the original metallic seal remains champagne gold.
 function toneTable(anchors: readonly (readonly [number, number])[]) {
@@ -107,14 +105,42 @@ export default function Home() {
     <main
       className={`envelope-page${opening ? " is-opening" : ""}${reducedMotion ? " reduce-opening" : ""}`}
       style={{
+        position: "relative",
+        isolation: "isolate",
+        overflow: "hidden",
         backgroundColor: "#4A4037",
-        backgroundImage: `linear-gradient(180deg, rgba(24,20,17,.10) 0%, rgba(24,20,17,.04) 42%, rgba(24,20,17,.15) 100%), url("${floralBackgroundUrl}")`,
-        backgroundSize: "cover, cover",
-        backgroundPosition: "center center, center center",
-        backgroundRepeat: "no-repeat, no-repeat",
         color: "#E2D8CA",
       }}
     >
+      <img
+        src="/floral-envelope-bg.jpg"
+        alt=""
+        aria-hidden="true"
+        loading="eager"
+        decoding="async"
+        fetchPriority="high"
+        draggable={false}
+        style={{
+          position: "absolute",
+          inset: 0,
+          zIndex: -2,
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          objectPosition: "center center",
+          pointerEvents: "none",
+        }}
+      />
+      <span
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          inset: 0,
+          zIndex: -1,
+          pointerEvents: "none",
+          background: "linear-gradient(180deg, rgba(24,20,17,.08) 0%, rgba(24,20,17,.02) 42%, rgba(24,20,17,.12) 100%)",
+        }}
+      />
       <svg width="0" height="0" aria-hidden="true" focusable="false" style={{ position: "absolute" }}>
         <defs>
           <filter id="stone-paper" colorInterpolationFilters="sRGB">
