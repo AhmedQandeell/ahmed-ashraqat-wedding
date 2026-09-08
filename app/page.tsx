@@ -105,12 +105,12 @@ export default function Home() {
     <main
       className={`envelope-page${opening ? " is-opening" : ""}${reducedMotion ? " reduce-opening" : ""}`}
       style={{
-        backgroundColor: "#171511",
+        backgroundColor: "#4A4037",
         backgroundImage:
-          "linear-gradient(180deg, rgba(17,15,12,.3) 0%, rgba(17,15,12,.08) 38%, rgba(17,15,12,.25) 100%), var(--wedding-floral)",
-        backgroundSize: "auto, auto max(100svh, 1200px)",
-        backgroundPosition: "center 45%",
-        backgroundRepeat: "no-repeat, repeat",
+          "linear-gradient(180deg, rgba(24,20,17,.10) 0%, rgba(24,20,17,.04) 42%, rgba(24,20,17,.15) 100%), url('/floral-envelope-bg.jpg')",
+        backgroundSize: "cover, cover",
+        backgroundPosition: "center center, center center",
+        backgroundRepeat: "no-repeat, no-repeat",
         color: "#E2D8CA",
       }}
     >
