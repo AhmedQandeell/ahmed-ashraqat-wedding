@@ -31,12 +31,12 @@ jobs:
       - name: Commit verification preview
         shell: bash
         run: |
-          if git diff --quiet -- debug/envelope-monogram-preview.b64; then
-            echo "No preview change detected."
-            exit 0
-          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add debug/envelope-monogram-preview.b64
+          if git diff --cached --quiet; then
+            echo "No preview change detected."
+            exit 0
+          fi
           git commit -m "Add wax monogram verification preview"
           git push origin HEAD:main
