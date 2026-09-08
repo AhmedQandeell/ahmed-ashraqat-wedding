@@ -1,0 +1,53 @@
+name: Apply floral stone envelope trial
+
+on:
+  push:
+    paths:
+      - ".github/workflows/apply-envelope-floral-trial.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  apply-trial:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install image tools
+        run: python -m pip install --quiet pillow numpy opencv-python-headless
+
+      - name: Restore uploaded floral background
+        shell: bash
+        run: |
+          cat tmp/floral-bg-1.txt tmp/floral-bg-2.txt tmp/floral-bg-3.txt tmp/floral-bg-4.txt | base64 --decode > public/floral-envelope-bg.jpg
+          python - <<'PY'
+          from PIL import Image
+          p='public/floral-envelope-bg.jpg'
+          im=Image.open(p)
+          im.verify()
+          print('Floral background verified:', im.size)
+          PY
+
+      - name: Apply stone-ivory envelope treatment
+        run: python scripts/apply-envelope-floral-trial.py
+
+      - name: Commit finished trial and clean temporary files
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm -f tmp/floral-bg-1.txt tmp/floral-bg-2.txt tmp/floral-bg-3.txt tmp/floral-bg-4.txt
+          git rm -f scripts/apply-envelope-floral-trial.py
+          git rm -f .github/workflows/apply-envelope-floral-trial.yml
+          git add app/globals.css public/envelope.png public/envelope-open.png public/floral-envelope-bg.jpg
+          git commit -m "Apply floral stone-envelope trial"
+          git push origin HEAD:main
