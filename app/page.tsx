@@ -130,25 +130,28 @@ export default function Home() {
             style={{
               position: "absolute",
               left: "50%",
-              top: "56.2%",
+              top: "53.3%",
               zIndex: 6,
-              width: "clamp(116px, 28%, 160px)",
-              height: "clamp(48px, 12%, 72px)",
+              width: "clamp(42px, 9.2%, 56px)",
+              aspectRatio: "1",
               display: "grid",
               placeItems: "center",
               transform: "translate(-50%, -50%)",
-              background: "radial-gradient(ellipse at center, rgba(242,234,220,1) 0%, rgba(242,234,220,.98) 58%, rgba(242,234,220,.86) 76%, rgba(242,234,220,0) 100%)",
-              color: "#9a7a4d",
+              borderRadius: "50%",
+              background: "radial-gradient(circle, rgba(201,168,108,.98) 0%, rgba(196,158,94,.94) 56%, rgba(184,142,75,.56) 69%, rgba(184,142,75,0) 78%)",
+              color: "#74572f",
               fontFamily: '"Cormorant Garamond", Georgia, serif',
-              fontSize: "clamp(24px, 5vw, 38px)",
-              fontStyle: "italic",
-              letterSpacing: ".06em",
+              fontSize: "clamp(11px, 2.1vw, 16px)",
+              fontWeight: 600,
+              letterSpacing: ".025em",
+              lineHeight: 1,
+              textShadow: "0 1px 0 rgba(255,245,220,.22)",
               opacity: opening ? 0 : 1,
-              transition: reducedMotion ? "none" : "opacity 260ms ease 40ms",
+              transition: reducedMotion ? "none" : "opacity 220ms ease 40ms",
               pointerEvents: "none",
             }}
           >
-            Q & A
+            Q&A
           </span>
         </span>
         <span className="open-label" aria-live="polite">
