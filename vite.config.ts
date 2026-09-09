@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import vinext from "vinext";
 import { defineConfig } from "vite";
 import hostingConfig from "./.openai/hosting.json";
@@ -8,12 +9,24 @@ const WEDDING_DATABASE_ID =
 
 const { d1, r2 } = hostingConfig;
 
+// Cloudflare Builds exposes GUESTBOOK_ADMIN_PASSWORD to the build process only.
+// Convert it to a one-way digest and deploy only that digest as a Worker binding,
+// so the raw admin password never becomes part of the repository or frontend.
+const adminBuildPassword = process.env.GUESTBOOK_ADMIN_PASSWORD?.trim();
+const adminPasswordHash =
+  adminBuildPassword && adminBuildPassword.length >= 12
+    ? createHash("sha256").update(adminBuildPassword, "utf8").digest("hex")
+    : undefined;
+
 // macOS Seatbelt blocks FSEvents, so Codex previews need polling for HMR.
 const isCodexSeatbeltSandbox = process.env.CODEX_SANDBOX === "seatbelt";
 
 const localBindingConfig = {
   main: "./worker/index.ts",
   compatibility_flags: ["nodejs_compat"],
+  vars: adminPasswordHash
+    ? { GUESTBOOK_ADMIN_PASSWORD_HASH: adminPasswordHash }
+    : {},
   d1_databases: d1
     ? [
         {
