@@ -328,6 +328,17 @@ export default function Invitation() {
               <div className="venue">
                 <p className="eyebrow">THE CELEBRATION</p>
                 <h2>Tiba Rose Hotel</h2>
+                <p
+                  style={{
+                    margin: "-14px 0 24px",
+                    color: "#716558",
+                    fontFamily: '"Cormorant Garamond", Garamond, Georgia, serif',
+                    fontSize: 17,
+                    fontStyle: "italic",
+                  }}
+                >
+                  La Rose Venue Hall
+                </p>
                 <a
                   className="submit-button"
                   href="https://maps.app.goo.gl/BrGWPSXwrq8SqrQB7"
