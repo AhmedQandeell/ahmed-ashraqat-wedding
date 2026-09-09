@@ -4,10 +4,23 @@ const COOKIE_NAME = "wedding_guestbook_admin";
 const SESSION_SECONDS = 60 * 60 * 12;
 const encoder = new TextEncoder();
 
-function adminSecret(): string | null {
-  const runtimeEnv = env as unknown as { GUESTBOOK_ADMIN_PASSWORD?: string };
+type AdminCredential =
+  | { kind: "secret"; secret: string }
+  | { kind: "hash"; hashHex: string };
+
+function adminCredential(): AdminCredential | null {
+  const runtimeEnv = env as unknown as {
+    GUESTBOOK_ADMIN_PASSWORD?: string;
+    GUESTBOOK_ADMIN_PASSWORD_HASH?: string;
+  };
+
   const secret = runtimeEnv.GUESTBOOK_ADMIN_PASSWORD?.trim();
-  return secret && secret.length >= 12 ? secret : null;
+  if (secret && secret.length >= 12) return { kind: "secret", secret };
+
+  const hashHex = runtimeEnv.GUESTBOOK_ADMIN_PASSWORD_HASH?.trim().toLowerCase();
+  if (hashHex && /^[0-9a-f]{64}$/.test(hashHex)) return { kind: "hash", hashHex };
+
+  return null;
 }
 
 function toBase64Url(bytes: Uint8Array): string {
@@ -27,6 +40,14 @@ function fromBase64Url(value: string): Uint8Array | null {
   }
 }
 
+function fromHex(value: string): Uint8Array {
+  const result = new Uint8Array(value.length / 2);
+  for (let index = 0; index < result.length; index += 1) {
+    result[index] = Number.parseInt(value.slice(index * 2, index * 2 + 2), 16);
+  }
+  return result;
+}
+
 async function hash(value: string): Promise<Uint8Array> {
   return new Uint8Array(await crypto.subtle.digest("SHA-256", encoder.encode(value)));
 }
@@ -36,6 +57,12 @@ function equalBytes(left: Uint8Array, right: Uint8Array): boolean {
   let different = 0;
   for (let index = 0; index < left.length; index += 1) different |= left[index] ^ right[index];
   return different === 0;
+}
+
+function sessionSigningSecret(credential: AdminCredential): string {
+  return credential.kind === "secret"
+    ? credential.secret
+    : `guestbook-admin-hash:${credential.hashHex}`;
 }
 
 async function signingKey(secret: string): Promise<CryptoKey> {
@@ -49,23 +76,29 @@ async function signingKey(secret: string): Promise<CryptoKey> {
 }
 
 export function isGuestbookAdminConfigured(): boolean {
-  return adminSecret() !== null;
+  return adminCredential() !== null;
 }
 
 export async function verifyGuestbookAdminPassword(password: string): Promise<boolean> {
-  const secret = adminSecret();
-  if (!secret || !password) return false;
-  const [providedHash, expectedHash] = await Promise.all([hash(password), hash(secret)]);
+  const credential = adminCredential();
+  if (!credential || !password) return false;
+
+  const providedHash = await hash(password.trim());
+  const expectedHash =
+    credential.kind === "secret"
+      ? await hash(credential.secret)
+      : fromHex(credential.hashHex);
+
   return equalBytes(providedHash, expectedHash);
 }
 
 export async function createGuestbookAdminCookie(): Promise<string> {
-  const secret = adminSecret();
-  if (!secret) throw new Error("Guestbook admin access is not configured");
+  const credential = adminCredential();
+  if (!credential) throw new Error("Guestbook admin access is not configured");
 
   const expiresAt = Date.now() + SESSION_SECONDS * 1000;
   const payload = `guestbook-admin:${expiresAt}`;
-  const key = await signingKey(secret);
+  const key = await signingKey(sessionSigningSecret(credential));
   const signature = new Uint8Array(await crypto.subtle.sign("HMAC", key, encoder.encode(payload)));
   const token = `${expiresAt}.${toBase64Url(signature)}`;
 
@@ -77,8 +110,8 @@ export function clearGuestbookAdminCookie(): string {
 }
 
 export async function hasGuestbookAdminSession(request: Request): Promise<boolean> {
-  const secret = adminSecret();
-  if (!secret) return false;
+  const credential = adminCredential();
+  if (!credential) return false;
 
   const cookieHeader = request.headers.get("cookie") ?? "";
   const token = cookieHeader
@@ -99,7 +132,7 @@ export async function hasGuestbookAdminSession(request: Request): Promise<boolea
   const signature = fromBase64Url(signatureText);
   if (!signature) return false;
 
-  const key = await signingKey(secret);
+  const key = await signingKey(sessionSigningSecret(credential));
   return crypto.subtle.verify(
     "HMAC",
     key,
