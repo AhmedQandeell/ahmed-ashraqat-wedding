@@ -178,7 +178,7 @@ function WeddingCalendar() {
                       height: "clamp(26px, 6.2vw, 34px)",
                       top: "50%",
                       left: "50%",
-                      transform: "translate(-50%, -49%)",
+                      transform: "translate(-50%, -43%)",
                       zIndex: 0,
                     }}
                   >
