@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 const VIDEO_ID = "Gcxv7i02lXc";
-const START_AT_SECONDS = 38;
+const START_AT_SECONDS = 30;
 const START_EVENT = "wedding-music-start";
 
 export default function MusicPlayer() {
