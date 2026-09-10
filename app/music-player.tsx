@@ -3,8 +3,8 @@
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
-const VIDEO_ID = "GMihmMfeazY";
-const START_AT_SECONDS = 28;
+const VIDEO_ID = "xeMOO5EudYs";
+const START_AT_SECONDS = 0;
 const START_EVENT = "wedding-music-start";
 
 export default function MusicPlayer() {
