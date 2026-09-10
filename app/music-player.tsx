@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
-const VIDEO_ID = "xeMOO5EudYs";
+const VIDEO_ID = "oTN7xO6emU0";
 const START_AT_SECONDS = 0;
 const START_EVENT = "wedding-music-start";
 
