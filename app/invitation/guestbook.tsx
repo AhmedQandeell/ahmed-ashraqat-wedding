@@ -222,14 +222,6 @@ export default function Guestbook() {
                   <p dir="auto">{entry.message}</p>
                   <div>
                     <strong dir="auto">{entry.name}</strong>
-                    <time dateTime={new Date(entry.created_at).toISOString()}>
-                      {new Date(entry.created_at).toLocaleDateString("en-GB", {
-                        day: "numeric",
-                        month: "short",
-                        year: "numeric",
-                        timeZone: "Africa/Cairo",
-                      })}
-                    </time>
                   </div>
                 </article>
               ))
